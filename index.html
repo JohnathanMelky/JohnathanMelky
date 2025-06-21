@@ -13,7 +13,7 @@
         html { scroll-behavior: smooth; }
         body { font-family:'Inter', sans-serif; margin: 0; color: var(--primary-text-color); line-height: 1.7; background-color: var(--color-darkest); overflow-x: hidden; }
         body.no-scroll { overflow: hidden; }
-        #spotlight-effect { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; background: radial-gradient(circle 500px at var(--x) var(--y), rgba(255, 199, 0, 0.08), transparent 80%); z-index: -1; transition: background 0.1s ease-out; }
+        #spotlight-effect { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; background: radial-gradient(circle 500px at var(--x) var(--y), rgba(255, 199, 0, 0.08), transparent 80%); z-index: -1; }
 
         .main-header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 1rem 5%; background: rgba(16, 16, 16, 0.7); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-color); }
         .header-content { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto; }
@@ -41,11 +41,9 @@
 
         /* DESKTOP & LANDSCAPE: Horizontal Carousel */
         @media (min-width: 769px), (orientation: landscape) {
-            .carousel-viewport { overflow: hidden; height: 30vw; max-height: 450px; }
+            .carousel-viewport { overflow: hidden; height: clamp(250px, 30vw, 450px); }
             .carousel-track { flex-direction: row; position: absolute; left: 0; top: 0; height: 100%; transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
             .category-item { height: 100%; flex-shrink: 0; aspect-ratio: 16/9; margin: 0 1vw; transform: scale(0.85); opacity: 0.4; transition: opacity 0.6s, transform 0.6s; }
-            .slide-active { transform: scale(1); opacity: 1; }
-            .slide-active .category-item-inner { border-color: var(--accent-color); box-shadow: 0 0 15px var(--glow-color), 0 10px 30px rgba(0,0,0,0.5); }
             .carousel-arrow { z-index: 50; background: rgba(30, 30, 30, 0.7); color: #fff; border: 1px solid var(--border-color); width: 50px; height: 50px; border-radius: 50%; backdrop-filter: blur(5px); position: absolute; top: 50%; transform: translateY(-50%); transition: all 0.3s; }
             #prev-btn { left: 2%; } #next-btn { right: 2%; }
             #prev-btn:hover, #next-btn:hover { background: var(--accent-color); color: var(--color-darkest); transform: translateY(-50%) scale(1.1); }
@@ -58,28 +56,34 @@
             .carousel-viewport::-webkit-scrollbar { display: none; }
             .carousel-track { flex-direction: column; align-items: center; gap: 3rem; padding: 15vh 0; }
             .category-item { 
-                width: 100%; /* FIX: Takes up 100% of parent, no vw units, no cropping */
+                width: 100%; /* FIX: Fills padded container, impossible to crop */
+                max-width: 400px;
                 flex-shrink: 0; aspect-ratio: 16 / 9; scroll-snap-align: center;
                 opacity: 0.6; transform: scale(0.9); transition: opacity 0.5s, transform 0.5s;
             }
+        }
+        
+        /* MOBILE SHARED STYLES (Portrait & Landscape) */
+        @media (max-width: 900px) {
             .slide-active { opacity: 1; transform: scale(1); }
             .slide-active .category-item-inner { border-color: var(--accent-color); box-shadow: 0 0 25px rgba(255, 199, 0, 0.4); }
             .carousel-arrow {
-                position: fixed; right: 20px; z-index: 100; width: 60px; height: 60px;
+                position: fixed; z-index: 100; width: 60px; height: 60px;
                 background: rgba(20, 20, 20, 0.8); border: 1px solid var(--border-color);
                 border-radius: 50%; font-size: 2rem; line-height: 60px; text-align: center;
                 backdrop-filter: blur(5px); box-shadow: 0 4px 15px rgba(0,0,0,0.3);
                 opacity: 0; pointer-events: none; transition: opacity 0.4s;
             }
             .carousel-arrow.is-visible { opacity: 1; pointer-events: auto; }
-            #prev-btn { top: 20vh; } #next-btn { bottom: 20vh; }
+            @media (orientation: portrait) { #prev-btn { top: 20vh; right: 20px; } #next-btn { bottom: 20vh; right: 20px; } }
+            @media (orientation: landscape) { #prev-btn { top: 50%; left: 20px; transform: translateY(-50%); } #next-btn { top: 50%; right: 20px; transform: translateY(-50%); } }
         }
 
         /* --- OTHER STYLES & RESPONSIVE --- */
         .hero-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 4rem; align-items: center; }
         .intro-paragraph { font-size: 1.25rem; color: var(--secondary-text-color); max-width: 650px; }
         .hero-skills { display: flex; flex-direction: column; align-items: center; }
-        .profile-picture-container { width: 250px; height: 250px; border-radius: 20px; margin: 0 auto; overflow: hidden; border: 2px solid var(--border-color); box-shadow: 0 0 20px rgba(0,0,0,0.5), 0 0 15px var(--glow-color); }
+        .profile-picture-container { width: 250px; height: 250px; border-radius: 20px; margin: 0 auto; overflow: hidden; border: 2px solid var(--border-color); box-shadow: 0 0 20px rgba(0,0,0,0.5), 0 0 15px rgba(255, 199, 0, 0.7); }
         .profile-picture-container img { width: 100%; height: 100%; object-fit: cover; }
         .profile-name { font-family: var(--font-heading); font-size: 2.2rem; font-weight: 700; text-shadow: 0 0 10px rgba(255, 199, 0, 0.5); margin-top: 1.5rem; }
         .skills-list { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; }
@@ -120,7 +124,7 @@
         const portfolioData = [
             { id: "props", title: "Props & Creatures", thumbnail: "./images/category-thumbnails/props.jpg" },
             { id: "product-design", title: "Product Design", thumbnail: "./images/category-thumbnails/product-design.jpg" },
-            { id: "environments", title: "Environment Design", thumbnail: "./images/category-thumbnails/environments.jpg" }, // STARTING SLIDE
+            { id: "environments", title: "Environment Design", thumbnail: "./images/category-thumbnails/environments.jpg" },
             { id: "Web-Logo-Design", title: "Web & Logo Design", thumbnail: "./images/category-thumbnails/Web-&-Logo-Design.jpg" },
             { id: "Electronics", title: "Electronics", thumbnail: "./images/category-thumbnails/Electronics.jpg" }
         ];
@@ -135,6 +139,7 @@
         const slides = [];
         let currentIndex = portfolioData.findIndex(p => p.id === startingProjectId);
         let mode = getMode();
+        let pointerDownPos = null; // For reliable tap detection
 
         function getMode() {
             if (window.innerWidth <= 768 && window.matchMedia("(orientation: portrait)").matches) return 'portrait';
@@ -142,76 +147,94 @@
             return 'desktop';
         }
 
-        // --- SETUP ---
-        function buildSlides() {
-            portfolioData.forEach((project, index) => {
-                const slide = document.createElement('div');
-                slide.className = 'category-item';
-                slide.dataset.index = index;
-                slide.innerHTML = `<div class="category-item-inner"><img src="${project.thumbnail}" alt="${project.title}"><div class="item-caption"><h3>${project.title}</h3></div></div>`;
-                track.appendChild(slide);
-                slides.push(slide);
-            });
-        }
+        // --- BUILD SLIDES ---
+        portfolioData.forEach((project, index) => {
+            const slide = document.createElement('div');
+            slide.className = 'category-item';
+            slide.dataset.index = index;
+            track.appendChild(slide);
+            slides.push(slide);
+            slide.innerHTML = `<div class="category-item-inner"><img src="${project.thumbnail}" alt="${project.title}"><div class="item-caption"><h3>${project.title}</h3></div></div>`;
+        });
 
-        function updateView(isInstant = false) {
+        // --- CORE LOGIC ---
+        function updateActiveSlide(isInstant = false) {
             slides.forEach((slide, index) => slide.classList.toggle('slide-active', index === currentIndex));
 
-            if (mode === 'portrait') {
-                track.style.transform = 'none'; // Ensure no transform interferes
-            } else {
+            if (mode === 'desktop' || mode === 'landscape') {
                 track.style.transition = isInstant ? 'none' : 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)';
                 const activeSlide = slides[currentIndex];
                 const offset = (viewport.offsetWidth / 2) - (activeSlide.offsetWidth / 2) - activeSlide.offsetLeft;
                 track.style.transform = `translateX(${offset}px)`;
             }
         }
-        
+
         function moveTo(index) {
             if (index < 0 || index >= slides.length) return;
             currentIndex = index;
+
             if (mode === 'portrait') {
                 slides[index].scrollIntoView({ behavior: 'smooth', block: 'center' });
             } else {
-                updateView();
+                updateActiveSlide();
             }
         }
-
+        
         // --- EVENT LISTENERS ---
         prevButton.addEventListener('click', () => moveTo(currentIndex - 1));
         nextButton.addEventListener('click', () => moveTo(currentIndex + 1));
-        track.addEventListener('click', (e) => {
-            const slide = e.target.closest('.category-item');
-            if (slide) {
-                const newIndex = parseInt(slide.dataset.index);
-                if (newIndex !== currentIndex) {
-                    moveTo(newIndex);
-                } else {
-                    console.log("Show lightbox for project " + portfolioData[currentIndex].id);
-                    // Lightbox logic will go here
-                }
-            }
+        
+        // ** NEW RELIABLE TAP HANDLER **
+        track.addEventListener('pointerdown', (e) => {
+            pointerDownPos = { x: e.clientX, y: e.clientY };
         });
 
-        // --- OBSERVERS & BREAKPOINT MANAGEMENT ---
-        function handleResize() {
-            const newMode = getMode();
-            if (mode !== newMode) {
-                mode = newMode;
-                prevButton.innerHTML = mode === 'portrait' ? '▲' : '<';
-                nextButton.innerHTML = mode === 'portrait' ? '▼' : '>';
-                updateView(true); // Instant update for the new view
-            }
-        }
+        track.addEventListener('pointerup', (e) => {
+            if (!pointerDownPos) return;
+            
+            const dx = Math.abs(e.clientX - pointerDownPos.x);
+            const dy = Math.abs(e.clientY - pointerDownPos.y);
 
+            if (dx < 10 && dy < 10) { // It's a clean tap, not a scroll/drag
+                const slide = e.target.closest('.category-item');
+                if (slide) {
+                    const newIndex = parseInt(slide.dataset.index);
+                    moveTo(newIndex);
+                    
+                    if (newIndex === currentIndex) {
+                         console.log("Open lightbox for " + portfolioData[currentIndex].id);
+                         // ADD LIGHTBOX LOGIC HERE LATER
+                    }
+                }
+            }
+            pointerDownPos = null;
+        });
+
+
+        // --- OBSERVERS & BREAKPOINT MANAGEMENT ---
+        function handleModeChange() {
+            const newMode = getMode();
+            if (mode === newMode) return; // No change
+            
+            mode = newMode;
+            prevButton.innerHTML = (mode === 'portrait') ? '▲' : '<';
+            nextButton.innerHTML = (mode === 'portrait') ? '▼' : '>';
+            track.style.transition = 'none'; // Prevent animation on resize
+            
+            if(mode !== 'portrait') {
+                viewport.scrollTo(0, 0); // Reset scroll position for non-portrait modes
+            }
+            updateActiveSlide(true); // Instant update for the new view
+        }
+        
         const arrowObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 const arrowsShouldBeVisible = entry.isIntersecting && mode !== 'desktop';
                 prevButton.classList.toggle('is-visible', arrowsShouldBeVisible);
                 nextButton.classList.toggle('is-visible', arrowsShouldBeVisible);
             });
-        }, { threshold: 0.3 });
-
+        }, { threshold: 0.5 });
+        
         const scrollObserver = new IntersectionObserver((entries) => {
             if (mode === 'portrait') {
                 entries.forEach(entry => {
@@ -225,17 +248,13 @@
         }, { root: viewport, threshold: 0.7 });
         
         // --- INITIALIZE ---
-        buildSlides();
-        handleResize(); // Initial check
+        handleModeChange(); // Set initial mode
         arrowObserver.observe(workSection);
         slides.forEach(slide => scrollObserver.observe(slide));
-        if (mode !== 'portrait') {
-            updateView(true);
-        }
+        updateActiveSlide(true); // Initial state set instantly
 
-        window.addEventListener('resize', handleResize);
-
-        // Universal utilities
+        window.addEventListener('resize', handleModeChange);
+        
         document.querySelectorAll('.nav-link').forEach(link => { link.addEventListener('click', (e) => { e.preventDefault(); document.querySelector(link.getAttribute('href')).scrollIntoView({ behavior: 'smooth' }); }); });
         const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
         const mainNav = document.querySelector('.main-nav');
