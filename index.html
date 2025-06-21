@@ -23,6 +23,8 @@
                     <li><a href="#contact" class="nav-link">Contact</a></li>
                 </ul>
             </nav>
+            <!-- NEW: Hamburger button for mobile -->
+            <button class="mobile-nav-toggle" aria-label="Open navigation menu">☰</button>
         </div>
     </header>
 
@@ -97,60 +99,12 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // =================================================================================
-        // === YOUR PORTFOLIO CONFIGURATION - THIS IS THE ONLY PLACE YOU NEED TO EDIT! ===
-        // =================================================================================
-        // INSTRUCTIONS FOR USING YOUR GOOGLE DRIVE IMAGES:
-        // 1. In the same folder as your index.html, create the folder structure described below (e.g., './images/project-Electronics/').
-        // 2. Download your images for each category from Google Drive.
-        // 3. RENAME your images sequentially: '01.jpg', '02.jpg', '03.jpg', etc.
-        // 4. Place the renamed images into the corresponding project folder.
-        // 5. Update the 'imageCount' for each category to match the number of images you have.
-        // 6. Make sure your category thumbnails also exist in the path specified (e.g., './images/category-thumbnails/Electronics.jpg').
-
         const portfolioData = [
-            {
-                id: "Electronics",
-                title: "Electronics: Gadgets & Gizmos",
-                thumbnail: "./images/category-thumbnails/Electronics.jpg",
-                // The script will look for your images inside this folder.
-                // It expects to find '01.jpg', '02.jpg', '03.jpg'... up to the imageCount.
-                folder: "./images/project-Electronics/",
-                imageCount: 15,
-                extension: "jpg"
-            },
-            {
-                id: "props",
-                title: "Props & Creatures: Game Assets",
-                thumbnail: "./images/category-thumbnails/props.jpg",
-                folder: "./images/project-props/",
-                imageCount: 15,
-                extension: "jpg"
-            },
-            {
-                id: "environments", // This will be the starting slide
-                title: "Environment Design: 'The Lost Valley'",
-                thumbnail: "./images/category-thumbnails/environments.jpg",
-                folder: "./images/project-environments/",
-                imageCount: 15,
-                extension: "jpg"
-            },
-            {
-                id: "product-design",
-                title: "Product Design: 'Chronos Watch'",
-                thumbnail: "./images/category-thumbnails/product-design.jpg",
-                folder: "./images/project-product-design/",
-                imageCount: 15,
-                extension: "jpg"
-            },
-            {
-                id: "Web-Logo-Design",
-                title: "Web & Logo Design: Branding",
-                thumbnail: "./images/category-thumbnails/Web-&-Logo-Design.jpg",
-                folder: "./images/project-Web-Logo-Design/",
-                imageCount: 15,
-                extension: "jpg"
-            }
+            { id: "Electronics", title: "Electronics: Gadgets & Gizmos", thumbnail: "./images/category-thumbnails/Electronics.jpg", folder: "./images/project-Electronics/", imageCount: 15, extension: "jpg" },
+            { id: "props", title: "Props & Creatures: Game Assets", thumbnail: "./images/category-thumbnails/props.jpg", folder: "./images/project-props/", imageCount: 15, extension: "jpg" },
+            { id: "environments", title: "Environment Design: 'The Lost Valley'", thumbnail: "./images/category-thumbnails/environments.jpg", folder: "./images/project-environments/", imageCount: 15, extension: "jpg" },
+            { id: "product-design", title: "Product Design: 'Chronos Watch'", thumbnail: "./images/category-thumbnails/product-design.jpg", folder: "./images/project-product-design/", imageCount: 15, extension: "jpg" },
+            { id: "Web-Logo-Design", title: "Web & Logo Design: Branding", thumbnail: "./images/category-thumbnails/Web-&-Logo-Design.jpg", folder: "./images/project-Web-Logo-Design/", imageCount: 15, extension: "jpg" }
         ];
 
         // ==================================================================
@@ -166,6 +120,25 @@
                 track.appendChild(slide);
             });
         }
+        
+        // --- Mobile Navigation ---
+        const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
+        const mainNav = document.querySelector('.main-nav');
+        mobileNavToggle.addEventListener('click', () => {
+            const isOpen = mainNav.classList.toggle('is-open');
+            mobileNavToggle.setAttribute('aria-expanded', isOpen);
+            document.body.classList.toggle('no-scroll', isOpen);
+            mobileNavToggle.textContent = isOpen ? '×' : '☰';
+        });
+        document.querySelectorAll('.main-nav .nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                if(mainNav.classList.contains('is-open')) {
+                    mainNav.classList.remove('is-open');
+                    document.body.classList.remove('no-scroll');
+                    mobileNavToggle.textContent = '☰';
+                }
+            });
+        });
 
         const spotlight = document.getElementById('spotlight-effect');
         window.addEventListener('mousemove', (e) => { requestAnimationFrame(() => { spotlight.style.setProperty('--x', `${e.clientX}px`); spotlight.style.setProperty('--y', `${e.clientY}px`); }); });
@@ -177,6 +150,7 @@
 
         if (track && portfolioData.length > 0) {
             const slides = Array.from(track.children);
+            const carouselViewport = document.querySelector('.carousel-viewport');
             const nextButton = document.getElementById('next-btn');
             const prevButton = document.getElementById('prev-btn');
             
@@ -185,9 +159,11 @@
             let currentIndex = startIndex;
             
             const updateCarousel = (instant = false) => {
-                track.classList.toggle('no-transition', instant);
+                if (instant) track.classList.add('no-transition');
+                else track.classList.remove('no-transition');
+                
                 const activeSlide = slides[currentIndex];
-                const offset = (track.parentElement.offsetWidth / 2) - (activeSlide.offsetWidth / 2) - activeSlide.offsetLeft;
+                const offset = (carouselViewport.offsetWidth / 2) - (activeSlide.offsetWidth / 2) - activeSlide.offsetLeft;
                 track.style.transform = `translateX(${offset}px)`;
                 slides.forEach(s => s.classList.remove('slide-active'));
                 activeSlide.classList.add('slide-active');
@@ -198,6 +174,35 @@
             nextButton.addEventListener('click', () => moveTo(currentIndex + 1));
             prevButton.addEventListener('click', () => moveTo(currentIndex - 1));
             window.addEventListener('resize', () => updateCarousel(true));
+
+            // --- Carousel Swipe Logic ---
+            let isDragging = false, startX, startTranslate;
+            carouselViewport.addEventListener('touchstart', (e) => {
+                isDragging = true;
+                startX = e.touches[0].pageX;
+                track.classList.add('no-transition');
+                const transformMatrix = new WebKitCSSMatrix(window.getComputedStyle(track).transform);
+                startTranslate = transformMatrix.m41;
+            });
+            carouselViewport.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+                const currentX = e.touches[0].pageX;
+                const diff = currentX - startX;
+                track.style.transform = `translateX(${startTranslate + diff}px)`;
+            });
+            carouselViewport.addEventListener('touchend', (e) => {
+                if (!isDragging) return;
+                isDragging = false;
+                const finalTranslate = new WebKitCSSMatrix(window.getComputedStyle(track).transform).m41;
+                const diff = finalTranslate - startTranslate;
+
+                if (Math.abs(diff) > 50) { // Swipe threshold
+                    if (diff < 0) moveTo(currentIndex + 1);
+                    else moveTo(currentIndex - 1);
+                } else {
+                    updateCarousel();
+                }
+            });
 
             const lightboxOverlay = document.getElementById('lightbox-overlay');
             const lightboxImg = document.getElementById('lightbox-img');
