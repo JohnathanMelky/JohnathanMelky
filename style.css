@@ -54,7 +54,7 @@ body.no-scroll {
 .mobile-nav-toggle { display: none; }
 
 .page-section { min-height: 100vh; padding: 8rem 5%; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-body { padding-top: 70px; } /* Adjust based on header height */
+body { padding-top: 70px; } 
 #about { background: transparent; }
 #work { background: var(--color-mid); border-top: 1px solid var(--border-color); }
 #contact { background: var(--color-lightest); border-top: 1px solid var(--border-color); }
@@ -153,48 +153,64 @@ footer { text-align: center; padding: 3rem 5%; background-color: var(--color-lig
     .main-nav ul { flex-direction: column; text-align: center; gap: 2.5rem; }
     .main-nav a { font-size: 2rem; }
 
-    /* --- MOBILE CAROUSEL - CORRECTED STYLES --- */
+    /* --- MOBILE CAROUSEL - DEFINITIVE FIX --- */
+    
+    /* 1. Make the #work section edge-to-edge */
+    #work.page-section {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    /* 2. Add padding back to the title so it's not at the edge */
+    #work .centered-title {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    /* 3. The container is a simple block element now */
     .carousel-container {
-        width: 100vw;
+        width: 100%; 
+        transform: none;
+        left: auto;
         position: relative;
-        left: 50%;
-        transform: translateX(-50%);
     }
 
     .carousel-arrow { 
         display: none; 
     }
 
+    /* 4. The viewport MUST hide overflowing content */
     .carousel-viewport {
-        height: calc((80vw / 16) * 9); /* Set height based on slide's aspect ratio */
+        overflow: hidden; 
+        height: calc((80vw / 16) * 9); 
         mask-image: none;
         -webkit-mask-image: none;
-        overflow: visible; /* Allow peeking items */
     }
     
+    /* 5. The track is a simple relative container */
     .carousel-track {
-        /* THIS IS THE CRITICAL FIX:
-           It removes the track from the absolute positioning used on desktop,
-           allowing it to behave as a normal, scrollable flex container. */
         position: relative;
         left: auto;
         top: auto;
     }
 
+    /* 6. Reset item styles for mobile */
     .category-item {
-        /* Reset desktop styles and set mobile-specific styles */
         width: 80vw;
         max-width: none;
-        transform: scale(1); /* Ensure slides are full size */
-        opacity: 1; /* Ensure slides are fully visible */
+        transform: scale(1);
+        opacity: 1;
         margin: 0 2.5vw;
-        padding: 0; /* Remove desktop padding */
-        transition: transform 0.4s ease; /* A simple transition for active state */
+        padding: 0;
+        transition: transform 0.4s ease;
+    }
+
+    .category-item::before {
+        display: none; /* Hide desktop glow border */
     }
 
     .slide-active {
-        /* Slightly enlarge the active slide to highlight it */
-        transform: scale(1.05);
+        transform: scale(1.05); /* Highlight active slide */
     }
 
     /* --- Mobile Hero --- */
