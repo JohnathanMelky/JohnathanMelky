@@ -1,263 +1,258 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Johnathan Melky - 3D Generalist Portfolio</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+/* --- GLOBAL & THEME --- */
+:root { 
+    --color-darkest: #101010; 
+    --color-mid: #181818; 
+    --color-lightest: #202020;
+    --accent-color: #FFC700; 
+    --glow-color: rgba(255, 199, 0, 0.7);
+    --font-heading: 'Poppins', sans-serif; 
+    --font-body: 'Inter', sans-serif;
+    --primary-text-color: #EAEAEA; 
+    --secondary-text-color: #999; 
+    --border-color: #303030;
+}
 
-    <div id="spotlight-effect"></div>
+html { 
+    scroll-behavior: smooth; 
+}
 
-    <header class="main-header">
-        <div class="header-content">
-            <div class="logo">Johnathan Melky</div>
-            <nav class="main-nav">
-                <ul>
-                    <li><a href="#about" class="nav-link">About</a></li>
-                    <li><a href="#work" class="nav-link">Work</a></li>
-                    <li><a href="#contact" class="nav-link">Contact</a></li>
-                </ul>
-            </nav>
-            <!-- NEW: Hamburger button for mobile -->
-            <button class="mobile-nav-toggle" aria-label="Open navigation menu">☰</button>
-        </div>
-    </header>
+body { 
+    font-family: var(--font-body); 
+    margin: 0; 
+    color: var(--primary-text-color);
+    line-height: 1.7; 
+    background-color: var(--color-darkest);
+    overflow-x: hidden; /* Prevents accidental horizontal scrolling */
+}
 
-    <main>
-        <!-- ================== HERO SECTION ================== -->
-        <section id="about" class="page-section">
-            <div class="content-wrapper hero-layout">
-                <div class="hero-text">
-                    <h1 class="reveal-line">I build <span class="accent-text">immersive 3D worlds</span> and bring digital products to life.</h1>
-                    <p class="intro-paragraph reveal-line">As a 3D Generalist with more than 4 years of experience in games studios and working with big clients like dubai police, I specialize in crafting everything from vast digital environments to detailed product visualizations, turning creative concepts into stunning, tangible realities.</p>
-                </div>
-                <div class="hero-skills">
-                    <div class="profile-picture-container reveal-line">
-                        <img src="./images/profile-picture.jpg" alt="A picture of Johnathan Melky">
-                    </div>
-                    <p class="profile-name reveal-line">Johnathan Melky</p>
-                    <h3 class="reveal-line">Core Skills</h3>
-                    <ul class="skills-list">
-                        <li>Blender</li>
-                        <li>ZBrush</li>
-                        <li>Substance Painter</li>
-                        <li>Unreal Engine</li>
-                        <li>Hard-Surface Modeling</li>
-                        <li>Character Art</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
+body.no-scroll { 
+    overflow: hidden; 
+}
 
-        <!-- ================== WORK SECTION ================== -->
-        <section id="work" class="page-section">
-            <div class="content-wrapper reveal-on-scroll">
-                <h1 class="centered-title">Selected Works</h1>
-            </div>
-            <div class="carousel-container reveal-on-scroll" data-delay="100">
-                <button id="prev-btn" class="carousel-arrow"><</button>
-                <div class="carousel-viewport">
-                    <!-- This track will be automatically filled by the JavaScript below -->
-                    <div class="carousel-track"></div>
-                </div>
-                <button id="next-btn" class="carousel-arrow">></button>
-            </div>
-        </section>
+/* === ANIMATIONS & EFFECTS === */
+#spotlight-effect {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none;
+    background: radial-gradient(circle 500px at var(--x) var(--y), rgba(255, 199, 0, 0.08), transparent 80%);
+    z-index: -1;
+    transition: background 0.1s ease-out;
+}
 
-        <!-- ================== CONTACT SECTION ================== -->
-        <section id="contact" class="page-section">
-            <div class="content-wrapper reveal-on-scroll">
-                <h1 class="centered-title">Let's Create Together</h1>
-                <p class="subtitle">Have a project in mind? I'm available for commissions and collaborations.</p>
-                <form class="contact-form" action="#" method="post">
-                    <div class="form-group"><label for="name">Your Name</label><input type="text" id="name" name="name" required></div>
-                    <div class="form-group"><label for="email">Your Email</label><input type="email" id="email" name="email" required></div>
-                    <div class="form-group full-width"><label for="message">Your Message</label><textarea id="message" name="message" rows="5" required></textarea></div>
-                    <button type="submit" class="btn-submit">Send Message</button>
-                </form>
-            </div>
-        </section>
-    </main>
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 var(--glow-color); } 70% { box-shadow: 0 0 0 10px rgba(255, 199, 0, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 199, 0, 0); } }
+@keyframes hover-glow-breathe { 0% { box-shadow: 0 8px 20px var(--glow-color); } 50% { box-shadow: 0 8px 35px var(--glow-color); } 100% { box-shadow: 0 8px 20px var(--glow-color); } }
+
+/* --- LAYOUT & TYPOGRAPHY --- */
+.main-header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 1rem 5%; background: rgba(16, 16, 16, 0.7); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-color); }
+.header-content { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto; }
+.logo { font-size: 1.8rem; font-family: var(--font-heading); text-shadow: 0 0 5px var(--glow-color); cursor: default; }
+.main-nav ul { list-style: none; display: flex; gap: 3rem; margin: 0; padding: 0; }
+.main-nav a { color: var(--secondary-text-color); text-decoration: none; transition: all 0.3s ease; padding: 5px 0; position: relative; }
+.main-nav a:hover { color: #fff; text-shadow: 0 0 8px var(--glow-color); }
+.main-nav a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 2px; background: var(--accent-color); transform: scaleX(0); transform-origin: right; transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1); }
+.main-nav a:hover::after { transform: scaleX(1); transform-origin: left; }
+
+.mobile-nav-toggle { display: none; }
+
+.page-section { min-height: 100vh; padding: 8rem 5%; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+body { padding-top: 70px; } 
+#about { background: transparent; }
+#work { background: var(--color-mid); border-top: 1px solid var(--border-color); }
+#contact { background: var(--color-lightest); border-top: 1px solid var(--border-color); }
+
+.content-wrapper { width: 100%; max-width: 1200px; }
+h1 { font-family: var(--font-heading); font-size: 4rem; line-height: 1.2; margin-bottom: 1rem; color: #fff; }
+.accent-text { color: var(--accent-color); text-shadow: 0 0 10px var(--glow-color); }
+.centered-title { text-align: center; }
+
+/* --- HERO SECTION --- */
+.hero-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 4rem; align-items: center; }
+.hero-skills { display: flex; flex-direction: column; align-items: center; }
+.profile-picture-container { width: 250px; height: 250px; border-radius: 20px; margin: 0 auto; position: relative; overflow: hidden; border: 2px solid var(--border-color); box-shadow: 0 0 20px rgba(0,0,0,0.5), 0 0 15px var(--glow-color); transition: transform 0.4s ease, box-shadow 0.4s ease; }
+.profile-picture-container img { width: 100%; height: 100%; object-fit: cover; }
+.profile-picture-container:hover { transform: scale(1.05) translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.4), 0 0 25px var(--glow-color); }
+.profile-name { font-family: var(--font-heading); font-size: 2.2rem; font-weight: 700; color: var(--primary-text-color); text-shadow: 0 0 10px rgba(255, 199, 0, 0.5); margin-top: 1.5rem; margin-bottom: 2.5rem; text-align: center; }
+.reveal-line { opacity: 0; transform: translateY(30px); transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.reveal-line.is-visible { opacity: 1; transform: translateY(0); }
+.hero-text .reveal-line:nth-child(1) { transition-delay: 0.2s; } .hero-text .reveal-line:nth-child(2) { transition-delay: 0.4s; }
+.profile-picture-container.reveal-line { transition-delay: 0.6s; } .profile-name.reveal-line { transition-delay: 0.8s; }
+.hero-skills h3.reveal-line { transition-delay: 1.0s; }
+.intro-paragraph { font-size: 1.25rem; color: var(--secondary-text-color); max-width: 650px; }
+.hero-skills h3 { font-family: var(--font-body); text-transform: uppercase; letter-spacing: 2px; color: var(--secondary-text-color); font-size: 1rem; margin-bottom: 1.5rem; }
+.skills-list { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 1rem; }
+.skills-list li { background-color: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); padding: 0.6rem 1.5rem; border-radius: 20px; cursor: default; transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, opacity 0.5s ease; opacity: 0; transform: translateY(20px); }
+.skills-list li.is-visible { opacity: 1; transform: translateY(0); }
+.skills-list li:nth-child(1) { transition-delay: 1.2s; } .skills-list li:nth-child(2) { transition-delay: 1.3s; } .skills-list li:nth-child(3) { transition-delay: 1.4s; } .skills-list li:nth-child(4) { transition-delay: 1.5s; } .skills-list li:nth-child(5) { transition-delay: 1.6s; } .skills-list li:nth-child(6) { transition-delay: 1.7s; }
+.skills-list li:hover { transform: translateY(-5px) scale(1.05); background-color: var(--accent-color); color: var(--color-darkest); border-color: var(--accent-color); animation: hover-glow-breathe 2s ease-in-out infinite; }
+
+/* --- CAROUSEL (Desktop) --- */
+.carousel-container { position: relative; width: 100%; margin-top: 3rem; user-select: none; }
+.carousel-viewport { position: relative; overflow: hidden; height: 28.125vw; max-height: 422px; -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent); mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent); }
+.carousel-track { display: flex; align-items: center; position: absolute; left: 0; top: 0; height: 100%; transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
+.carousel-track.no-transition { transition: none; }
+.category-item { position: relative; width: 50vw; max-width: 750px; flex-shrink: 0; aspect-ratio: 16 / 9; margin: 0 1vw; transform: scale(0.85); opacity: 0.4; transition: opacity 0.6s ease, transform 0.6s ease; cursor: pointer; box-sizing: border-box; padding: 15px; }
+.category-item::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; border-radius: 20px; border: 2px solid var(--accent-color); box-shadow: 0 0 15px var(--glow-color), inset 0 0 15px var(--glow-color); opacity: 0; transition: opacity 0.5s ease; pointer-events: none; }
+.category-item-inner { width: 100%; height: 100%; position: relative; border-radius: 12px; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6); }
+.category-item img { width: 100%; height: 100%; object-fit: cover; }
+.item-caption { position: absolute; bottom: 0; left: 0; padding: 1rem 2rem; background: linear-gradient(to top, rgba(0,0,0,0.85) 10%, transparent); width: calc(100% - 4rem); border-radius: 0 0 12px 12px; transition: opacity 0.5s ease; }
+.item-caption h3 { margin: 0; color: #fff; font-size: 1.5rem; }
+.slide-active { z-index: 3; transform: scale(1); opacity: 1; }
+.slide-active::before { opacity: 1; }
+.slide-prev .item-caption, .slide-next .item-caption { opacity: 0; }
+.carousel-arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 50; background: rgba(30, 30, 30, 0.7); color: #fff; border: 1px solid var(--border-color); width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 1.5rem; transition: all 0.3s ease; backdrop-filter: blur(5px); }
+#prev-btn { left: 2%; } #next-btn { right: 2%; }
+#prev-btn:hover, #next-btn:hover { background: var(--accent-color); color: var(--color-darkest); border-color: var(--accent-color); transform: translateY(-50%) scale(1.1); }
+
+/* --- CONTACT FORM & FOOTER --- */
+#contact .content-wrapper { max-width: 800px; margin: auto; }
+.subtitle { color: var(--secondary-text-color); font-size: 1.25rem; text-align: center; margin-top: -1rem; margin-bottom: 3rem; }
+.contact-form { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+.form-group { display: flex; flex-direction: column; position: relative; }
+.full-width { grid-column: 1 / -1; }
+.form-group label { margin-bottom: 0.5rem; }
+.form-group input, .form-group textarea { padding: 1rem; border: none; background: #111; color: var(--primary-text-color); border-radius: 8px; font-size: 1rem; border-bottom: 2px solid var(--border-color); transition: border-color 0.3s ease; }
+.form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--accent-color); }
+.btn-submit { grid-column: 1 / -1; justify-self: start; padding: 1rem 2.5rem; background: var(--accent-color); color: #000; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; transition: all 0.3s ease; animation: pulse 2s infinite; }
+.btn-submit:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 10px 20px rgba(255, 199, 0, 0.4); animation: none; }
+.reveal-on-scroll { opacity: 0; transform: translateY(30px); transition: opacity 1s ease, transform 1s cubic-bezier(0.165, 0.84, 0.44, 1); }
+.reveal-on-scroll.is-visible { opacity: 1; transform: translateY(0); }
+footer { text-align: center; padding: 3rem 5%; background-color: var(--color-lightest); border-top: 1px solid var(--border-color);}
+
+/* --- LIGHTBOX --- */
+.lightbox-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); z-index: 2000; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; backdrop-filter: blur(5px); }
+.lightbox-overlay.visible { opacity: 1; pointer-events: auto; }
+.lightbox-content { display: flex; justify-content: center; align-items: center; max-width: 95vw; max-height: 95vh; position: relative; }
+#lightbox-img { max-width: 80vw; max-height: 75vh; width: auto; height: auto; object-fit: contain; border-radius: 12px; border: 2px solid #282828; box-shadow: 0 0 35px -5px var(--glow-color), inset 1px 1px 4px rgba(255, 255, 255, 0.1), inset -1px -1px 4px rgba(0, 0, 0, 0.6); transform: scale(0.95); opacity: 0; transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease; }
+#lightbox-img.loaded { transform: scale(1); opacity: 1; }
+#lightbox-caption { position: absolute; bottom: -2.5rem; width: 100%; text-align: center; color: var(--secondary-text-color); font-size: 1.1rem; }
+#lightbox-counter { position: absolute; top: -2.5rem; left: 50%; transform: translateX(-50%); color: var(--secondary-text-color); background: rgba(0, 0, 0, 0.5); padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.9rem; }
+.lightbox-close-btn { position: absolute; top: 2rem; right: 2rem; font-size: 3rem; color: #fff; cursor: pointer; }
+.lightbox-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255, 255, 255, 0.1); border: none; color: #fff; width: 50px; height: 100px; font-size: 2rem; cursor: pointer; transition: background 0.3s; }
+.lightbox-arrow:hover { background: rgba(255, 255, 255, 0.2); }
+#lightbox-prev { left: 1rem; } #lightbox-next { right: 1rem; }
+
+/* ========================================= */
+/* === RESPONSIVE & MOBILE STYLES === */
+/* ========================================= */
+@media (max-width: 900px) { 
+    .hero-layout { grid-template-columns: 1fr; text-align: center; gap: 2rem; } 
+    .intro-paragraph { margin-left: auto; margin-right: auto; } 
+    .hero-skills { margin-top: 3rem; }
+    .skills-list { justify-content: center; }
+}
+
+@media (max-width: 768px) {
+    /* --- Mobile Header Bar --- */
+    body {
+        padding-top: 60px; 
+    }
+    .main-header {
+        padding: 0.5rem 5%; 
+    }
+    .logo {
+        font-size: 1.4rem; 
+    }
+    .mobile-nav-toggle {
+        display: block;
+        font-size: 2rem;
+        z-index: 1001; 
+        background: none; 
+        border: none; 
+        color: var(--primary-text-color); 
+        cursor: pointer;
+    }
     
-    <footer><p>© 2025 Johnathan Melky. All Rights Reserved.</p></footer>
-
-    <div id="lightbox-overlay" class="lightbox-overlay">
-        <div class="lightbox-content">
-            <div id="lightbox-counter"></div>
-            <img id="lightbox-img" src="" alt="Artwork">
-            <div id="lightbox-caption"></div>
-        </div>
-        <button id="lightbox-prev" class="lightbox-arrow"><</button>
-        <button id="lightbox-next" class="lightbox-arrow">></button>
-        <span class="lightbox-close-btn">×</span>
-    </div>
-
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const portfolioData = [
-            { id: "Electronics", title: "Electronics: Gadgets & Gizmos", thumbnail: "./images/category-thumbnails/Electronics.jpg", folder: "./images/project-Electronics/", imageCount: 15, extension: "jpg" },
-            { id: "props", title: "Props & Creatures: Game Assets", thumbnail: "./images/category-thumbnails/props.jpg", folder: "./images/project-props/", imageCount: 15, extension: "jpg" },
-            { id: "environments", title: "Environment Design: 'The Lost Valley'", thumbnail: "./images/category-thumbnails/environments.jpg", folder: "./images/project-environments/", imageCount: 15, extension: "jpg" },
-            { id: "product-design", title: "Product Design: 'Chronos Watch'", thumbnail: "./images/category-thumbnails/product-design.jpg", folder: "./images/project-product-design/", imageCount: 15, extension: "jpg" },
-            { id: "Web-Logo-Design", title: "Web & Logo Design: Branding", thumbnail: "./images/category-thumbnails/Web-&-Logo-Design.jpg", folder: "./images/project-Web-Logo-Design/", imageCount: 15, extension: "jpg" }
-        ];
-
-        // ==================================================================
-        // === CORE WEBSITE LOGIC (No need to edit below this line) ===
-        // ==================================================================
-        const track = document.querySelector('.carousel-track');
-        if (track) {
-            portfolioData.forEach(project => {
-                const slide = document.createElement('div');
-                slide.className = 'category-item';
-                slide.dataset.projectId = project.id;
-                slide.innerHTML = `<div class="category-item-inner"><img src="${project.thumbnail}" alt="${project.title}"><div class="item-caption"><h3>${project.title.split(':')[0]}</h3></div></div>`;
-                track.appendChild(slide);
-            });
-        }
+    .page-section { padding-left: 20px; padding-right: 20px; }
+    h1 { font-size: 2.5rem; } 
+    .intro-paragraph { font-size: 1.1rem; }
+    .contact-form { grid-template-columns: 1fr; }
+    
+    /* --- Mobile Navigation (Opened Menu) --- */
+    .main-nav { 
+        position: fixed; 
+        top: 0; 
+        left: 0; 
+        width: 100%; 
+        height: 100%; 
+        background: var(--color-darkest); 
+        display: flex; 
+        justify-content: center; 
+        transform: translateX(100%); 
+        transition: transform 0.4s cubic-bezier(0.7, 0, 0.3, 1);
         
-        // --- Mobile Navigation ---
-        const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
-        const mainNav = document.querySelector('.main-nav');
-        mobileNavToggle.addEventListener('click', () => {
-            const isOpen = mainNav.classList.toggle('is-open');
-            mobileNavToggle.setAttribute('aria-expanded', isOpen);
-            document.body.classList.toggle('no-scroll', isOpen);
-            mobileNavToggle.textContent = isOpen ? '×' : '☰';
-        });
-        document.querySelectorAll('.main-nav .nav-link').forEach(link => {
-            link.addEventListener('click', () => {
-                if(mainNav.classList.contains('is-open')) {
-                    mainNav.classList.remove('is-open');
-                    document.body.classList.remove('no-scroll');
-                    mobileNavToggle.textContent = '☰';
-                }
-            });
-        });
+        /* --- THE FIX IS HERE --- */
+        align-items: center; /* This correctly centers the items vertically */
+        padding-top: 0;      /* Padding is removed to allow true centering */
+    }
+    .main-nav.is-open { transform: translateX(0); }
+    .main-nav ul { 
+        flex-direction: column; 
+        text-align: center; 
+        gap: 1.5rem; 
+    }
+    .main-nav a { 
+        font-size: 1.3rem; 
+    }
 
-        const spotlight = document.getElementById('spotlight-effect');
-        window.addEventListener('mousemove', (e) => { requestAnimationFrame(() => { spotlight.style.setProperty('--x', `${e.clientX}px`); spotlight.style.setProperty('--y', `${e.clientY}px`); }); });
-        
-        document.querySelectorAll('.nav-link').forEach(link => { link.addEventListener('click', (e) => { e.preventDefault(); document.querySelector(link.getAttribute('href')).scrollIntoView({ behavior: 'smooth' }); }); });
+    /* --- MOBILE CAROUSEL --- */
+    .carousel-container {
+        width: 100%; 
+        transform: none;
+        left: auto;
+        position: relative;
+    }
 
-        const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('is-visible'); observer.unobserve(entry.target); } }); }, { threshold: 0.1 });
-        document.querySelectorAll('.reveal-on-scroll, .reveal-line, .skills-list li').forEach(el => observer.observe(el));
+    .carousel-arrow { 
+        display: none; 
+    }
 
-        if (track && portfolioData.length > 0) {
-            const slides = Array.from(track.children);
-            const carouselViewport = document.querySelector('.carousel-viewport');
-            const nextButton = document.getElementById('next-btn');
-            const prevButton = document.getElementById('prev-btn');
-            
-            let startIndex = portfolioData.findIndex(p => p.id === "environments");
-            if (startIndex === -1) startIndex = Math.floor(slides.length / 2);
-            let currentIndex = startIndex;
-            
-            const updateCarousel = (instant = false) => {
-                if (instant) track.classList.add('no-transition');
-                else track.classList.remove('no-transition');
-                
-                const activeSlide = slides[currentIndex];
-                const offset = (carouselViewport.offsetWidth / 2) - (activeSlide.offsetWidth / 2) - activeSlide.offsetLeft;
-                track.style.transform = `translateX(${offset}px)`;
-                slides.forEach(s => s.classList.remove('slide-active'));
-                activeSlide.classList.add('slide-active');
-            };
-            
-            const moveTo = (index) => { currentIndex = (index + slides.length) % slides.length; updateCarousel(); };
-            
-            nextButton.addEventListener('click', () => moveTo(currentIndex + 1));
-            prevButton.addEventListener('click', () => moveTo(currentIndex - 1));
-            window.addEventListener('resize', () => updateCarousel(true));
+    .carousel-viewport {
+        overflow: hidden; 
+        height: calc((80% / 16) * 9); 
+        mask-image: none;
+        -webkit-mask-image: none;
+    }
+    
+    .carousel-track {
+        position: relative;
+        left: auto;
+        top: auto;
+        display: flex;
+        align-items: center;
+    }
 
-            // --- Carousel Swipe Logic ---
-            let isDragging = false, startX, startTranslate;
-            carouselViewport.addEventListener('touchstart', (e) => {
-                isDragging = true;
-                startX = e.touches[0].pageX;
-                track.classList.add('no-transition');
-                const transformMatrix = new WebKitCSSMatrix(window.getComputedStyle(track).transform);
-                startTranslate = transformMatrix.m41;
-            });
-            carouselViewport.addEventListener('touchmove', (e) => {
-                if (!isDragging) return;
-                const currentX = e.touches[0].pageX;
-                const diff = currentX - startX;
-                track.style.transform = `translateX(${startTranslate + diff}px)`;
-            });
-            carouselViewport.addEventListener('touchend', (e) => {
-                if (!isDragging) return;
-                isDragging = false;
-                const finalTranslate = new WebKitCSSMatrix(window.getComputedStyle(track).transform).m41;
-                const diff = finalTranslate - startTranslate;
+    .category-item {
+        width: 80%;
+        margin: 0 2.5%; 
+        max-width: none;
+        transform: scale(1); 
+        opacity: 1; 
+        padding: 0; 
+        transition: transform 0.4s ease; 
+    }
 
-                if (Math.abs(diff) > 50) { // Swipe threshold
-                    if (diff < 0) moveTo(currentIndex + 1);
-                    else moveTo(currentIndex - 1);
-                } else {
-                    updateCarousel();
-                }
-            });
+    .category-item::before {
+        display: none; 
+    }
+    
+    .slide-active {
+        transform: scale(1.05); 
+    }
+    
+    .item-caption h3 {
+        font-size: 1.2rem;
+    }
 
-            const lightboxOverlay = document.getElementById('lightbox-overlay');
-            const lightboxImg = document.getElementById('lightbox-img');
-            const lightboxCaption = document.getElementById('lightbox-caption');
-            const lightboxCounter = document.getElementById('lightbox-counter');
-            let currentGalleryImages = [];
-            let currentGalleryIndex = 0;
 
-            const updateLightboxImage = () => {
-                if (currentGalleryImages.length > 0) {
-                    lightboxImg.classList.remove('loaded');
-                    const img = new Image();
-                    img.src = currentGalleryImages[currentGalleryIndex];
-                    img.onload = () => {
-                        lightboxImg.src = img.src;
-                        lightboxImg.classList.add('loaded');
-                        lightboxCounter.textContent = `${currentGalleryIndex + 1} / ${currentGalleryImages.length}`;
-                    };
-                }
-            };
-            
-            const showLightbox = (projectId) => {
-                const project = portfolioData.find(p => p.id === projectId);
-                if (!project || !project.imageCount) return;
+    /* --- Mobile Hero --- */
+    .profile-picture-container { width: 200px; height: 200px; }
+    .profile-name { font-size: 1.8rem; }
+}
 
-                currentGalleryImages = [];
-                for (let i = 1; i <= project.imageCount; i++) {
-                    const number = String(i).padStart(2, '0');
-                    currentGalleryImages.push(`${project.folder}${number}.${project.extension}`);
-                }
-
-                currentGalleryIndex = 0;
-                lightboxCaption.textContent = project.title.split(':')[0];
-                
-                updateLightboxImage();
-                lightboxOverlay.classList.add('visible');
-                document.body.style.overflow = 'hidden';
-            };
-
-            const hideLightbox = () => { lightboxOverlay.classList.remove('visible'); document.body.style.overflow = ''; };
-
-            document.getElementById('lightbox-next').addEventListener('click', () => { currentGalleryIndex = (currentGalleryIndex + 1) % currentGalleryImages.length; updateLightboxImage(); });
-            document.getElementById('lightbox-prev').addEventListener('click', () => { currentGalleryIndex = (currentGalleryIndex - 1 + currentGalleryImages.length) % currentGalleryImages.length; updateLightboxImage(); });
-            
-            slides.forEach((slide, index) => {
-                slide.addEventListener('click', () => { 
-                    if (index === currentIndex) showLightbox(slide.dataset.projectId);
-                    else moveTo(index);
-                });
-            });
-            
-            document.querySelector('.lightbox-close-btn').addEventListener('click', hideLightbox);
-            updateCarousel(true);
-        }
-    });
-    </script>
-</body>
-</html>
+@media (max-width: 480px) {
+    h1 { font-size: 2rem; }
+    .logo { font-size: 1.2rem; }
+    .page-section { padding-left: 15px; padding-right: 15px; }
+    .lightbox-arrow { width: 40px; height: 80px; font-size: 1.5rem; }
+    #lightbox-prev { left: 5px; } #lightbox-next { right: 5px; }
+    .lightbox-close-btn { top: 1rem; right: 1rem; font-size: 2.5rem; }
+}
