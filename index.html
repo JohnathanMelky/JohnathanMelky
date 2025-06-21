@@ -91,10 +91,8 @@
             }
             .slide-active { opacity: 1; transform: scale(1); box-shadow: 0 0 25px rgba(255, 199, 0, 0.4); border-radius: 12px; }
             .carousel-arrow {
-                position: fixed; right: 20px; z-index: 100;
-                width: 60px; height: 60px;
-                background: rgba(20, 20, 20, 0.8);
-                border: 1px solid var(--border-color);
+                position: fixed; right: 20px; z-index: 100; width: 60px; height: 60px;
+                background: rgba(20, 20, 20, 0.8); border: 1px solid var(--border-color);
                 border-radius: 50%; font-size: 2rem; line-height: 60px; text-align: center;
                 backdrop-filter: blur(5px); box-shadow: 0 4px 15px rgba(0,0,0,0.3);
                 opacity: 0; pointer-events: none;
@@ -102,8 +100,7 @@
             }
             .carousel-arrow.is-visible { opacity: 1; pointer-events: auto; }
             .carousel-arrow:active { transform: scale(0.9); }
-            #prev-btn { top: 20vh; }
-            #next-btn { bottom: 20vh; }
+            #prev-btn { top: 20vh; } #next-btn { bottom: 20vh; }
         }
 
         /* OTHER STYLES & RESPONSIVE */
@@ -180,14 +177,17 @@
     
     <script>
     document.addEventListener('DOMContentLoaded', () => {
+        // --- DATA ---
+        // FIX: Reordered to put 'environments' in the middle for easy desktop default
         const portfolioData = [
             { id: "Electronics", title: "Electronics", thumbnail: "./images/category-thumbnails/Electronics.jpg"},
             { id: "props", title: "Props & Creatures", thumbnail: "./images/category-thumbnails/props.jpg"},
-            { id: "environments", title: "Environment Design", thumbnail: "./images/category-thumbnails/environments.jpg"}, // The desired starting item
+            { id: "environments", title: "Environment Design", thumbnail: "./images/category-thumbnails/environments.jpg"},
             { id: "product-design", title: "Product Design", thumbnail: "./images/category-thumbnails/product-design.jpg"},
             { id: "Web-Logo-Design", title: "Web & Logo Design", thumbnail: "./images/category-thumbnails/Web-&-Logo-Design.jpg"}
         ];
 
+        // --- ELEMENTS ---
         const track = document.querySelector('.carousel-track');
         const prevButton = document.getElementById('prev-btn');
         const nextButton = document.getElementById('next-btn');
@@ -197,21 +197,21 @@
         let currentIndex = 0;
         let isMobile = window.innerWidth <= 768;
 
+        // --- POPULATE SLIDES ---
         portfolioData.forEach(project => {
             const slide = document.createElement('div');
             slide.className = 'category-item';
             slide.dataset.projectId = project.id;
             slide.innerHTML = `<div class="category-item-inner"><img src="${project.thumbnail}" alt="${project.title}"><div class="item-caption"><h3>${project.title}</h3></div></div>`;
             track.appendChild(slide);
-slides.push(slide);
+            slides.push(slide);
         });
 
         function initDesktop() {
             isMobile = false;
             prevButton.innerHTML = '<'; nextButton.innerHTML = '>';
-            track.style.transform = '';
-
-            currentIndex = portfolioData.findIndex(p => p.id === "environments");
+            // FIX: Set default to the middle slide
+            currentIndex = Math.floor(slides.length / 2);
 
             const updateCarousel = (instant = false) => {
                 track.style.transition = instant ? 'none' : 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)';
@@ -221,12 +221,11 @@ slides.push(slide);
                 slides.forEach(s => s.classList.remove('slide-active'));
                 activeSlide.classList.add('slide-active');
             };
-
             const moveTo = (index) => { currentIndex = (index + slides.length) % slides.length; updateCarousel(); };
             
             prevButton.onclick = () => moveTo(currentIndex - 1);
             nextButton.onclick = () => moveTo(currentIndex + 1);
-            slides.forEach((slide, index) => { slide.onclick = () => moveTo(index); });
+            slides.forEach((slide, index) => slide.onclick = () => moveTo(index));
             updateCarousel(true);
         }
 
@@ -235,42 +234,40 @@ slides.push(slide);
             prevButton.innerHTML = '▲'; nextButton.innerHTML = '▼';
             track.style.transform = 'none';
 
-            // Observer to track which slide is visible FOR ARROW LOGIC
+            // Set the default active slide without scrolling to it
+            currentIndex = slides.findIndex(s => s.dataset.projectId === 'environments');
+            if (currentIndex === -1) currentIndex = 0; // Fallback
+            slides[currentIndex].classList.add('slide-active');
+
             const slideObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     entry.target.classList.toggle('slide-active', entry.isIntersecting);
-                    if(entry.isIntersecting) {
-                        // This updates the index as the user MANUALLY scrolls
-                        currentIndex = slides.indexOf(entry.target);
-                    }
+                    if(entry.isIntersecting) { currentIndex = slides.indexOf(entry.target); }
                 });
             }, { root: viewport, threshold: 0.7 });
             slides.forEach(slide => slideObserver.observe(slide));
-
-            // Function to programmatically scroll
+            
             const scrollToSlide = (index) => { if(slides[index]) { slides[index].scrollIntoView({ behavior: 'smooth', block: 'center' }); } };
 
-            // FIX: Robust arrow logic that updates the index itself
+            // FIX: New, robust arrow click logic
             prevButton.onclick = () => { if (currentIndex > 0) { currentIndex--; scrollToSlide(currentIndex); }};
             nextButton.onclick = () => { if (currentIndex < slides.length - 1) { currentIndex++; scrollToSlide(currentIndex); }};
 
-            // FIX: Observer for arrow visibility
             const arrowObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     prevButton.classList.toggle('is-visible', entry.isIntersecting);
                     nextButton.classList.toggle('is-visible', entry.isIntersecting);
                 });
             }, { 
-                // FIX: Higher threshold so arrows appear later
-                threshold: 0.4 
+                // FIX: Higher threshold for arrow visibility
+                threshold: 0.5
             });
             arrowObserver.observe(workSection);
         }
         
         const checkBreakpointAndInit = () => {
             const shouldBeMobile = window.innerWidth <= 768;
-            if (shouldBeMobile && !isMobile) location.reload();
-            else if (!shouldBeMobile && isMobile) location.reload();
+            if (shouldBeMobile !== isMobile) location.reload();
         };
 
         if (isMobile) initMobile();
