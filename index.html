@@ -58,10 +58,6 @@
 
         /* --- HERO SECTION --- */
         .hero-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 4rem; align-items: center; }
-        .hero-skills { display: flex; flex-direction: column; align-items: center; }
-        .profile-picture-container { width: 250px; height: 250px; border-radius: 20px; margin: 0 auto; position: relative; overflow: hidden; border: 2px solid var(--border-color); box-shadow: 0 0 20px rgba(0,0,0,0.5), 0 0 15px var(--glow-color); transition: transform 0.4s ease, box-shadow 0.4s ease; }
-        .profile-picture-container img { width: 100%; height: 100%; object-fit: cover; }
-        .profile-picture-container:hover { transform: scale(1.05) translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.4), 0 0 25px var(--glow-color); }
         .intro-paragraph { font-size: 1.25rem; color: var(--secondary-text-color); max-width: 650px; }
         
         /* --- CAROUSEL (Desktop) --- */
@@ -70,29 +66,28 @@
         .carousel-track { display: flex; align-items: center; position: absolute; left: 0; top: 0; height: 100%; transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
         .carousel-track.no-transition { transition: none; }
         .category-item { position: relative; width: 50vw; max-width: 750px; flex-shrink: 0; aspect-ratio: 16 / 9; margin: 0 1vw; transform: scale(0.85); opacity: 0.4; transition: opacity 0.6s ease, transform 0.6s ease; cursor: pointer; box-sizing: border-box; padding: 15px; }
-        .category-item::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; border-radius: 20px; border: 2px solid transparent; box-shadow: 0 0 15px var(--glow-color), inset 0 0 15px var(--glow-color); opacity: 0; transition: opacity 0.5s ease; pointer-events: none; }
         .category-item-inner { width: 100%; height: 100%; position: relative; border-radius: 12px; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6); }
         .category-item img { width: 100%; height: 100%; object-fit: cover; }
         .item-caption { position: absolute; bottom: 0; left: 0; padding: 1rem 2rem; background: linear-gradient(to top, rgba(0,0,0,0.85) 10%, transparent); width: calc(100% - 4rem); border-radius: 0 0 12px 12px; transition: opacity 0.5s ease; }
         .item-caption h3 { margin: 0; color: #fff; font-size: 1.5rem; }
         .slide-active { z-index: 3; transform: scale(1); opacity: 1; }
-        .slide-active::before { opacity: 1; border-color: var(--accent-color); }
+        .slide-active .category-item-inner { border: 2px solid var(--accent-color); box-shadow: 0 0 15px var(--glow-color), 0 10px 30px rgba(0,0,0,0.5); }
         .carousel-arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 50; background: rgba(30, 30, 30, 0.7); color: #fff; border: 1px solid var(--border-color); width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 1.5rem; transition: all 0.3s ease; backdrop-filter: blur(5px); }
         #prev-btn { left: 2%; } #next-btn { right: 2%; }
         #prev-btn:hover, #next-btn:hover { background: var(--accent-color); color: var(--color-darkest); border-color: var(--accent-color); transform: translateY(-50%) scale(1.1); }
 
         /* OTHER STYLES (Unchanged) */
+        .hero-skills { display: flex; flex-direction: column; align-items: center; }
+        .profile-picture-container { width: 250px; height: 250px; border-radius: 20px; margin: 0 auto; position: relative; overflow: hidden; border: 2px solid var(--border-color); box-shadow: 0 0 20px rgba(0,0,0,0.5), 0 0 15px var(--glow-color); transition: transform 0.4s ease, box-shadow 0.4s ease; }
+        .profile-picture-container img { width: 100%; height: 100%; object-fit: cover; }
+        .profile-picture-container:hover { transform: scale(1.05) translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.4), 0 0 25px var(--glow-color); }
         .profile-name { font-family: var(--font-heading); font-size: 2.2rem; font-weight: 700; color: var(--primary-text-color); text-shadow: 0 0 10px rgba(255, 199, 0, 0.5); margin-top: 1.5rem; margin-bottom: 2.5rem; text-align: center; }
         .reveal-line { opacity: 0; transform: translateY(30px); transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
         .reveal-line.is-visible { opacity: 1; transform: translateY(0); }
-        .hero-text .reveal-line:nth-child(1) { transition-delay: 0.2s; } .hero-text .reveal-line:nth-child(2) { transition-delay: 0.4s; }
-        .profile-picture-container.reveal-line { transition-delay: 0.6s; } .profile-name.reveal-line { transition-delay: 0.8s; }
-        .hero-skills h3.reveal-line { transition-delay: 1.0s; }
         .hero-skills h3 { font-family: var(--font-body); text-transform: uppercase; letter-spacing: 2px; color: var(--secondary-text-color); font-size: 1rem; margin-bottom: 1.5rem; }
         .skills-list { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 1rem; }
         .skills-list li { background-color: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); padding: 0.6rem 1.5rem; border-radius: 20px; cursor: default; transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, opacity 0.5s ease; opacity: 0; transform: translateY(20px); }
         .skills-list li.is-visible { opacity: 1; transform: translateY(0); }
-        .skills-list li:nth-child(1) { transition-delay: 1.2s; } .skills-list li:nth-child(2) { transition-delay: 1.3s; } .skills-list li:nth-child(3) { transition-delay: 1.4s; } .skills-list li:nth-child(4) { transition-delay: 1.5s; } .skills-list li:nth-child(5) { transition-delay: 1.6s; } .skills-list li:nth-child(6) { transition-delay: 1.7s; }
         .skills-list li:hover { transform: translateY(-5px) scale(1.05); background-color: var(--accent-color); color: var(--color-darkest); border-color: var(--accent-color); animation: hover-glow-breathe 2s ease-in-out infinite; }
         #contact .content-wrapper { max-width: 800px; margin: auto; }
         .subtitle { color: var(--secondary-text-color); font-size: 1.25rem; text-align: center; margin-top: -1rem; margin-bottom: 3rem; }
@@ -146,31 +141,23 @@
             /* --- FINAL & STABLE MOBILE CAROUSEL --- */
             .carousel-arrow { display: none; }
             .carousel-viewport {
-                overflow: hidden; /* CRITICAL: Contains the track without horizontal scroll */
+                overflow: hidden;
                 mask-image: none;
                 -webkit-mask-image: none;
-                /* CRITICAL: Fixes "not showing" bug by setting explicit height */
-                height: calc(75vw * 9 / 16);
-                /* CRITICAL: Prevents page navigation swipe glitch */
+                /* THIS IS THE FIX: The height is calculated from the container's own width (which is stable) */
+                height: calc(100% * 0.5625); /* 16:9 Aspect Ratio (9 / 16 = 0.5625) */
                 touch-action: pan-y;
             }
             .category-item {
-                width: 75vw; /* Set a predictable width based on the viewport */
+                width: 75vw; /* Make slides smaller than viewport to show peeking sides */
                 margin: 0 10px;
-                padding: 0; /* CRITICAL: Remove padding to prevent cropping */
+                padding: 0; /* Remove padding to prevent cropping */
                 transform: scale(0.9);
                 opacity: 0.6;
             }
             .slide-active {
                 transform: scale(1);
                 opacity: 1;
-            }
-            .slide-active .category-item-inner { /* Apply border to inner element */
-                border: 2px solid var(--accent-color);
-                box-shadow: 0 0 15px var(--glow-color), 0 10px 30px rgba(0,0,0,0.5);
-            }
-            .category-item::before { /* Disable the desktop border effect on mobile */
-                display: none;
             }
             .item-caption { padding: 0.8rem 1rem; width: calc(100% - 2rem); }
             .item-caption h3 { font-size: 1.2rem; }
@@ -181,7 +168,6 @@
             .logo { font-size: 1.5rem; }
             .page-section { padding: 5rem 15px; }
             .category-item { width: 80vw; }
-            .carousel-viewport { height: calc(80vw * 9 / 16); }
         }
     </style>
 </head>
