@@ -150,8 +150,14 @@ footer { text-align: center; padding: 3rem 5%; background-color: var(--color-lig
     .mobile-nav-toggle { display: block; z-index: 1001; background: none; border: none; color: var(--primary-text-color); font-size: 2.5rem; cursor: pointer; }
     .main-nav { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--color-darkest); display: flex; justify-content: center; align-items: center; transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.7, 0, 0.3, 1); }
     .main-nav.is-open { transform: translateX(0); }
-    .main-nav ul { flex-direction: column; text-align: center; gap: 2.5rem; }
-    .main-nav a { font-size: 2rem; }
+    .main-nav ul { 
+        flex-direction: column; 
+        text-align: center; 
+        gap: 2rem; /* REDUCED: Adjusted gap to match the new smaller font size */
+    }
+    .main-nav a { 
+        font-size: 1.5rem; /* REDUCED: Made the menu links smaller for a better fit on mobile */
+    }
 
     /* --- MOBILE CAROUSEL - DEFINITIVE FIX --- */
     .carousel-container {
