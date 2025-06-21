@@ -50,7 +50,6 @@
         .mobile-nav-toggle { display: none; }
 
         .page-section { min-height: 100vh; padding: 8rem 5%; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        body { padding-top: 70px; }
         #work { overflow: hidden; /* Prevents mobile carousel from causing issues */ }
         .content-wrapper { width: 100%; max-width: 1200px; }
         h1 { font-family: var(--font-heading); font-size: 4rem; line-height: 1.2; margin-bottom: 1rem; color: #fff; }
@@ -144,37 +143,36 @@
             .main-nav ul { flex-direction: column; text-align: center; gap: 2.5rem; }
             .main-nav a { font-size: 2rem; }
 
-            /* --- FINAL MOBILE CAROUSEL --- */
-            .carousel-container {
-                /* Let it be contained by the page padding */
-                width: 100%;
-            }
-            .carousel-arrow {
-                /* Hide arrows on touch-first devices */
-                display: none;
-            }
+            /* --- FINAL & STABLE MOBILE CAROUSEL --- */
+            .carousel-arrow { display: none; }
             .carousel-viewport {
-                height: auto; /* Let aspect-ratio define the height */
+                overflow: hidden; /* CRITICAL: Contains the track without horizontal scroll */
                 mask-image: none;
                 -webkit-mask-image: none;
-                /* This is the magic fix that stops the page-swipe glitch */
+                /* CRITICAL: Fixes "not showing" bug by setting explicit height */
+                height: calc(75vw * 9 / 16);
+                /* CRITICAL: Prevents page navigation swipe glitch */
                 touch-action: pan-y;
             }
             .category-item {
-                /* Make center slide smaller than viewport to show peeking sides */
-                width: 75%; 
+                width: 75vw; /* Set a predictable width based on the viewport */
                 margin: 0 10px;
-                /* Remove padding to prevent cropping */
-                padding: 0; 
+                padding: 0; /* CRITICAL: Remove padding to prevent cropping */
                 transform: scale(0.9);
+                opacity: 0.6;
             }
             .slide-active {
                 transform: scale(1);
+                opacity: 1;
             }
-            .item-caption {
-                padding: 0.8rem 1rem;
-                width: calc(100% - 2rem);
+            .slide-active .category-item-inner { /* Apply border to inner element */
+                border: 2px solid var(--accent-color);
+                box-shadow: 0 0 15px var(--glow-color), 0 10px 30px rgba(0,0,0,0.5);
             }
+            .category-item::before { /* Disable the desktop border effect on mobile */
+                display: none;
+            }
+            .item-caption { padding: 0.8rem 1rem; width: calc(100% - 2rem); }
             .item-caption h3 { font-size: 1.2rem; }
         }
 
@@ -182,7 +180,8 @@
             h1 { font-size: 2rem; }
             .logo { font-size: 1.5rem; }
             .page-section { padding: 5rem 15px; }
-            .category-item { width: 80%; }
+            .category-item { width: 80vw; }
+            .carousel-viewport { height: calc(80vw * 9 / 16); }
         }
     </style>
 </head>
