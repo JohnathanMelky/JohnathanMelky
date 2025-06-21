@@ -11,16 +11,23 @@
     --secondary-text-color: #999; 
     --border-color: #303030;
 }
-html { scroll-behavior: smooth; }
+
+html { 
+    scroll-behavior: smooth; 
+}
+
 body { 
     font-family: var(--font-body); 
     margin: 0; 
     color: var(--primary-text-color);
     line-height: 1.7; 
     background-color: var(--color-darkest);
-    overflow-x: hidden;
+    overflow-x: hidden; /* Prevents accidental horizontal scrolling */
 }
-body.no-scroll { overflow: hidden; }
+
+body.no-scroll { 
+    overflow: hidden; 
+}
 
 /* === ANIMATIONS & EFFECTS === */
 #spotlight-effect {
@@ -30,6 +37,7 @@ body.no-scroll { overflow: hidden; }
     z-index: -1;
     transition: background 0.1s ease-out;
 }
+
 @keyframes pulse { 0% { box-shadow: 0 0 0 0 var(--glow-color); } 70% { box-shadow: 0 0 0 10px rgba(255, 199, 0, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 199, 0, 0); } }
 @keyframes hover-glow-breathe { 0% { box-shadow: 0 8px 20px var(--glow-color); } 50% { box-shadow: 0 8px 35px var(--glow-color); } 100% { box-shadow: 0 8px 20px var(--glow-color); } }
 
@@ -46,7 +54,7 @@ body.no-scroll { overflow: hidden; }
 .mobile-nav-toggle { display: none; }
 
 .page-section { min-height: 100vh; padding: 8rem 5%; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-body { padding-top: 70px; }
+body { padding-top: 70px; } /* Adjust based on header height */
 #about { background: transparent; }
 #work { background: var(--color-mid); border-top: 1px solid var(--border-color); }
 #contact { background: var(--color-lightest); border-top: 1px solid var(--border-color); }
@@ -76,7 +84,7 @@ h1 { font-family: var(--font-heading); font-size: 4rem; line-height: 1.2; margin
 .skills-list li:nth-child(1) { transition-delay: 1.2s; } .skills-list li:nth-child(2) { transition-delay: 1.3s; } .skills-list li:nth-child(3) { transition-delay: 1.4s; } .skills-list li:nth-child(4) { transition-delay: 1.5s; } .skills-list li:nth-child(5) { transition-delay: 1.6s; } .skills-list li:nth-child(6) { transition-delay: 1.7s; }
 .skills-list li:hover { transform: translateY(-5px) scale(1.05); background-color: var(--accent-color); color: var(--color-darkest); border-color: var(--accent-color); animation: hover-glow-breathe 2s ease-in-out infinite; }
 
-/* --- CAROUSEL --- */
+/* --- CAROUSEL (Desktop) --- */
 .carousel-container { position: relative; width: 100%; margin-top: 3rem; user-select: none; }
 .carousel-viewport { position: relative; overflow: hidden; height: 28.125vw; max-height: 422px; -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent); mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent); }
 .carousel-track { display: flex; align-items: center; position: absolute; left: 0; top: 0; height: 100%; transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
@@ -94,7 +102,7 @@ h1 { font-family: var(--font-heading); font-size: 4rem; line-height: 1.2; margin
 #prev-btn { left: 2%; } #next-btn { right: 2%; }
 #prev-btn:hover, #next-btn:hover { background: var(--accent-color); color: var(--color-darkest); border-color: var(--accent-color); transform: translateY(-50%) scale(1.1); }
 
-/* --- CONTACT FORM, ETC. --- */
+/* --- CONTACT FORM & FOOTER --- */
 #contact .content-wrapper { max-width: 800px; margin: auto; }
 .subtitle { color: var(--secondary-text-color); font-size: 1.25rem; text-align: center; margin-top: -1rem; margin-bottom: 3rem; }
 .contact-form { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
@@ -107,6 +115,9 @@ h1 { font-family: var(--font-heading); font-size: 4rem; line-height: 1.2; margin
 .btn-submit:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 10px 20px rgba(255, 199, 0, 0.4); animation: none; }
 .reveal-on-scroll { opacity: 0; transform: translateY(30px); transition: opacity 1s ease, transform 1s cubic-bezier(0.165, 0.84, 0.44, 1); }
 .reveal-on-scroll.is-visible { opacity: 1; transform: translateY(0); }
+footer { text-align: center; padding: 3rem 5%; background-color: var(--color-lightest); border-top: 1px solid var(--border-color);}
+
+/* --- LIGHTBOX --- */
 .lightbox-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); z-index: 2000; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; backdrop-filter: blur(5px); }
 .lightbox-overlay.visible { opacity: 1; pointer-events: auto; }
 .lightbox-content { display: flex; justify-content: center; align-items: center; max-width: 95vw; max-height: 95vh; position: relative; }
@@ -118,7 +129,6 @@ h1 { font-family: var(--font-heading); font-size: 4rem; line-height: 1.2; margin
 .lightbox-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255, 255, 255, 0.1); border: none; color: #fff; width: 50px; height: 100px; font-size: 2rem; cursor: pointer; transition: background 0.3s; }
 .lightbox-arrow:hover { background: rgba(255, 255, 255, 0.2); }
 #lightbox-prev { left: 1rem; } #lightbox-next { right: 1rem; }
-footer { text-align: center; padding: 3rem 5%; background-color: var(--color-lightest); border-top: 1px solid var(--border-color);}
 
 /* ========================================= */
 /* === RESPONSIVE & MOBILE STYLES === */
@@ -143,24 +153,48 @@ footer { text-align: center; padding: 3rem 5%; background-color: var(--color-lig
     .main-nav ul { flex-direction: column; text-align: center; gap: 2.5rem; }
     .main-nav a { font-size: 2rem; }
 
-    /* --- MOBILE CAROUSEL - FULL BLEED PEEKING EFFECT --- */
+    /* --- MOBILE CAROUSEL - CORRECTED STYLES --- */
     .carousel-container {
-        /* This makes the container span the full screen width */
         width: 100vw;
         position: relative;
         left: 50%;
         transform: translateX(-50%);
     }
-    .carousel-arrow { display: none; }
+
+    .carousel-arrow { 
+        display: none; 
+    }
+
     .carousel-viewport {
-        width: 100%;
-        height: calc((80vw / 16) * 9); /* Height based on the new slide width */
+        height: calc((80vw / 16) * 9); /* Set height based on slide's aspect ratio */
         mask-image: none;
         -webkit-mask-image: none;
+        overflow: visible; /* Allow peeking items */
     }
+    
+    .carousel-track {
+        /* THIS IS THE CRITICAL FIX:
+           It removes the track from the absolute positioning used on desktop,
+           allowing it to behave as a normal, scrollable flex container. */
+        position: relative;
+        left: auto;
+        top: auto;
+    }
+
     .category-item {
-        width: 80vw; /* Make slides smaller than viewport to show peeking sides */
-        margin: 0 2.5vw; /* Create space between slides */
+        /* Reset desktop styles and set mobile-specific styles */
+        width: 80vw;
+        max-width: none;
+        transform: scale(1); /* Ensure slides are full size */
+        opacity: 1; /* Ensure slides are fully visible */
+        margin: 0 2.5vw;
+        padding: 0; /* Remove desktop padding */
+        transition: transform 0.4s ease; /* A simple transition for active state */
+    }
+
+    .slide-active {
+        /* Slightly enlarge the active slide to highlight it */
+        transform: scale(1.05);
     }
 
     /* --- Mobile Hero --- */
