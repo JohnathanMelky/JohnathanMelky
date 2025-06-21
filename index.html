@@ -11,8 +11,13 @@
     <!-- Styles for vertical carousel on mobile -->
     <style>
         @media (max-width: 768px) {
+            /* --- FIX #1: Prevent horizontal overflow for the entire page on mobile --- */
+            html, body {
+                overflow-x: hidden;
+            }
+
             #work .carousel-container {
-                height: 65vh; /* Give the container a fixed height */
+                height: 65vh; 
                 max-height: 500px;
                 flex-direction: column;
             }
@@ -20,27 +25,27 @@
             #work .carousel-viewport {
                 width: 100%;
                 height: 100%;
+                /* --- FIX #2: Force the viewport to hide overflowing content --- */
+                overflow: hidden; 
             }
 
             #work .carousel-track {
-                /* The JS will handle transform, CSS sets the direction */
                 flex-direction: column; 
-                width: 100%; /* <<< THE FIX IS HERE: Constrain track width */
+                width: 100%; 
             }
             
             #work .category-item {
-                width: 75% !important; /* Center the item with some padding on the sides */
+                width: 75% !important; 
                 height: auto;
-                margin: 20px auto; /* Vertical margin and horizontal centering */
+                margin: 20px auto; 
                 flex-shrink: 0;
             }
             
             #work .carousel-arrow {
-                display: none; /* Hide horizontal arrows on mobile */
+                display: none; 
             }
 
             #work .category-item.slide-active .category-item-inner {
-                 /* Add a subtle visual cue for the active slide */
                 transform: scale(1.05);
                 box-shadow: 0 8px 30px rgba(0,0,0,0.2);
             }
@@ -61,7 +66,6 @@
                     <li><a href="#contact" class="nav-link">Contact</a></li>
                 </ul>
             </nav>
-            <!-- NEW: Hamburger button for mobile -->
             <button class="mobile-nav-toggle" aria-label="Open navigation menu">☰</button>
         </div>
     </header>
@@ -100,7 +104,6 @@
             <div class="carousel-container reveal-on-scroll" data-delay="100">
                 <button id="prev-btn" class="carousel-arrow"><</button>
                 <div class="carousel-viewport">
-                    <!-- This track will be automatically filled by the JavaScript below -->
                     <div class="carousel-track"></div>
                 </div>
                 <button id="next-btn" class="carousel-arrow">></button>
@@ -207,13 +210,11 @@
                 const activeSlide = slides[currentIndex];
                 let offset;
                 if (isVertical) {
-                    // Vertical centering logic
-                    track.style.flexDirection = 'column'; // Ensure vertical layout
+                    track.style.flexDirection = 'column';
                     offset = (carouselViewport.offsetHeight / 2) - (activeSlide.offsetHeight / 2) - activeSlide.offsetTop;
                     track.style.transform = `translateY(${offset}px)`;
                 } else {
-                    // Horizontal centering logic
-                    track.style.flexDirection = 'row'; // Ensure horizontal layout
+                    track.style.flexDirection = 'row';
                     offset = (carouselViewport.offsetWidth / 2) - (activeSlide.offsetWidth / 2) - activeSlide.offsetLeft;
                     track.style.transform = `translateX(${offset}px)`;
                 }
@@ -229,7 +230,12 @@
             
             nextButton.addEventListener('click', () => moveTo(currentIndex + 1));
             prevButton.addEventListener('click', () => moveTo(currentIndex - 1));
-            window.addEventListener('resize', () => updateCarousel(true));
+            window.addEventListener('resize', () => {
+                // When resizing, we might switch between horizontal and vertical
+                // We need to clear any transform that might be incorrect for the new layout
+                track.style.transform = ''; 
+                updateCarousel(true);
+            });
 
             // --- Carousel Swipe Logic (Handles both Vertical and Horizontal) ---
             let isDragging = false, startPos, startTranslate;
@@ -247,7 +253,7 @@
             carouselViewport.addEventListener('touchmove', (e) => {
                 if (!isDragging) return;
                 const isVertical = window.innerWidth <= MOBILE_BREAKPOINT;
-                // Prevent page scrolling only when swiping vertically on mobile
+                // Allow vertical scrolling on desktop, but prevent on mobile during swipe
                 if (isVertical) {
                     e.preventDefault();
                 }
@@ -258,7 +264,7 @@
                 } else {
                     track.style.transform = `translateX(${startTranslate + diff}px)`;
                 }
-            }, { passive: false }); // Must be false to allow preventDefault
+            }, { passive: false }); 
 
             carouselViewport.addEventListener('touchend', () => {
                 if (!isDragging) return;
@@ -275,7 +281,7 @@
                         moveTo(currentIndex - 1);
                     }
                 } else {
-                    updateCarousel(); // Snap back to the current item
+                    updateCarousel(); 
                 }
             });
 
