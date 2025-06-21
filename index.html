@@ -12,7 +12,6 @@
         :root { --color-darkest:#101010; --color-mid:#181818; --accent-color:#FFC700; --font-heading:'Poppins', sans-serif; --primary-text-color:#EAEAEA; --secondary-text-color:#999; --border-color:#303030; }
         html { scroll-behavior: smooth; }
         body { font-family:'Inter', sans-serif; margin: 0; color: var(--primary-text-color); line-height: 1.7; background-color: var(--color-darkest); overflow-x: hidden; }
-        body.no-scroll { overflow: hidden; }
         #spotlight-effect { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; background: radial-gradient(circle 500px at var(--x) var(--y), rgba(255, 199, 0, 0.08), transparent 80%); z-index: -1; }
 
         .main-header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 1rem 5%; background: rgba(16, 16, 16, 0.7); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-color); }
@@ -40,7 +39,7 @@
         .item-caption h3 { margin: 0; color: #fff; font-size: 1.2rem; }
 
         /* DESKTOP & LANDSCAPE: Horizontal Carousel */
-        @media (min-width: 769px), (orientation: landscape) {
+        @media (min-width: 769px), (min-aspect-ratio: 1/1) {
             .carousel-viewport { overflow: hidden; height: clamp(250px, 30vw, 450px); }
             .carousel-track { flex-direction: row; position: absolute; left: 0; top: 0; height: 100%; transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
             .category-item { height: 100%; flex-shrink: 0; aspect-ratio: 16/9; margin: 0 1vw; transform: scale(0.85); opacity: 0.4; transition: opacity 0.6s, transform 0.6s; }
@@ -55,29 +54,14 @@
             .carousel-viewport { overflow-y: scroll; scroll-snap-type: y mandatory; height: 75vh; scrollbar-width: none; -ms-overflow-style: none; }
             .carousel-viewport::-webkit-scrollbar { display: none; }
             .carousel-track { flex-direction: column; align-items: center; gap: 3rem; padding: 15vh 0; }
-            .category-item { 
-                width: 100%; /* FIX: Fills padded container, impossible to crop */
-                max-width: 400px;
-                flex-shrink: 0; aspect-ratio: 16 / 9; scroll-snap-align: center;
-                opacity: 0.6; transform: scale(0.9); transition: opacity 0.5s, transform 0.5s;
-            }
+            .category-item { width: 100%; flex-shrink: 0; aspect-ratio: 16 / 9; scroll-snap-align: center; opacity: 0.6; transform: scale(0.9); transition: opacity 0.5s, transform 0.5s; }
+            .carousel-arrow { position: fixed; right: 20px; z-index: 100; width: 60px; height: 60px; background: rgba(20, 20, 20, 0.8); border: 1px solid var(--border-color); border-radius: 50%; font-size: 2rem; line-height: 60px; text-align: center; backdrop-filter: blur(5px); box-shadow: 0 4px 15px rgba(0,0,0,0.3); opacity: 0; pointer-events: none; transition: opacity 0.4s; }
+            .carousel-arrow.is-visible { opacity: 1; pointer-events: auto; }
+            #prev-btn { top: 20vh; } #next-btn { bottom: 20vh; }
         }
         
-        /* MOBILE SHARED STYLES (Portrait & Landscape) */
-        @media (max-width: 900px) {
-            .slide-active { opacity: 1; transform: scale(1); }
-            .slide-active .category-item-inner { border-color: var(--accent-color); box-shadow: 0 0 25px rgba(255, 199, 0, 0.4); }
-            .carousel-arrow {
-                position: fixed; z-index: 100; width: 60px; height: 60px;
-                background: rgba(20, 20, 20, 0.8); border: 1px solid var(--border-color);
-                border-radius: 50%; font-size: 2rem; line-height: 60px; text-align: center;
-                backdrop-filter: blur(5px); box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-                opacity: 0; pointer-events: none; transition: opacity 0.4s;
-            }
-            .carousel-arrow.is-visible { opacity: 1; pointer-events: auto; }
-            @media (orientation: portrait) { #prev-btn { top: 20vh; right: 20px; } #next-btn { bottom: 20vh; right: 20px; } }
-            @media (orientation: landscape) { #prev-btn { top: 50%; left: 20px; transform: translateY(-50%); } #next-btn { top: 50%; right: 20px; transform: translateY(-50%); } }
-        }
+        .slide-active { opacity: 1; transform: scale(1); }
+        .slide-active .category-item-inner { border-color: var(--accent-color); box-shadow: 0 0 25px rgba(255, 199, 0, 0.4); }
 
         /* --- OTHER STYLES & RESPONSIVE --- */
         .hero-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 4rem; align-items: center; }
@@ -139,7 +123,7 @@
         const slides = [];
         let currentIndex = portfolioData.findIndex(p => p.id === startingProjectId);
         let mode = getMode();
-        let pointerDownPos = null; // For reliable tap detection
+        let pointerDownPos = null;
 
         function getMode() {
             if (window.innerWidth <= 768 && window.matchMedia("(orientation: portrait)").matches) return 'portrait';
@@ -158,17 +142,18 @@
         });
 
         // --- CORE LOGIC ---
-        function updateActiveSlide(isInstant = false) {
+        function updateView(isInstant = false) {
             slides.forEach((slide, index) => slide.classList.toggle('slide-active', index === currentIndex));
 
             if (mode === 'desktop' || mode === 'landscape') {
                 track.style.transition = isInstant ? 'none' : 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)';
                 const activeSlide = slides[currentIndex];
+                if (!activeSlide) return;
                 const offset = (viewport.offsetWidth / 2) - (activeSlide.offsetWidth / 2) - activeSlide.offsetLeft;
                 track.style.transform = `translateX(${offset}px)`;
             }
         }
-
+        
         function moveTo(index) {
             if (index < 0 || index >= slides.length) return;
             currentIndex = index;
@@ -176,7 +161,7 @@
             if (mode === 'portrait') {
                 slides[index].scrollIntoView({ behavior: 'smooth', block: 'center' });
             } else {
-                updateActiveSlide();
+                updateView();
             }
         }
         
@@ -184,47 +169,42 @@
         prevButton.addEventListener('click', () => moveTo(currentIndex - 1));
         nextButton.addEventListener('click', () => moveTo(currentIndex + 1));
         
-        // ** NEW RELIABLE TAP HANDLER **
         track.addEventListener('pointerdown', (e) => {
             pointerDownPos = { x: e.clientX, y: e.clientY };
         });
 
         track.addEventListener('pointerup', (e) => {
             if (!pointerDownPos) return;
-            
             const dx = Math.abs(e.clientX - pointerDownPos.x);
             const dy = Math.abs(e.clientY - pointerDownPos.y);
+            const isTap = dx < 10 && dy < 10;
 
-            if (dx < 10 && dy < 10) { // It's a clean tap, not a scroll/drag
+            if (isTap) {
                 const slide = e.target.closest('.category-item');
                 if (slide) {
-                    const newIndex = parseInt(slide.dataset.index);
-                    moveTo(newIndex);
-                    
-                    if (newIndex === currentIndex) {
-                         console.log("Open lightbox for " + portfolioData[currentIndex].id);
-                         // ADD LIGHTBOX LOGIC HERE LATER
+                    const tappedIndex = parseInt(slide.dataset.index);
+                    if (tappedIndex === currentIndex) {
+                        console.log("Open lightbox for " + portfolioData[currentIndex].id);
+                        // Future lightbox logic here
+                    } else {
+                        moveTo(tappedIndex);
                     }
                 }
             }
             pointerDownPos = null;
         });
 
-
         // --- OBSERVERS & BREAKPOINT MANAGEMENT ---
-        function handleModeChange() {
+        function handleResize() {
             const newMode = getMode();
-            if (mode === newMode) return; // No change
+            if (mode === newMode) return;
             
             mode = newMode;
             prevButton.innerHTML = (mode === 'portrait') ? '▲' : '<';
             nextButton.innerHTML = (mode === 'portrait') ? '▼' : '>';
-            track.style.transition = 'none'; // Prevent animation on resize
-            
-            if(mode !== 'portrait') {
-                viewport.scrollTo(0, 0); // Reset scroll position for non-portrait modes
-            }
-            updateActiveSlide(true); // Instant update for the new view
+            track.style.transition = 'none';
+            if(mode !== 'portrait') viewport.scrollTo(0, 0);
+            updateView(true);
         }
         
         const arrowObserver = new IntersectionObserver((entries) => {
@@ -233,27 +213,28 @@
                 prevButton.classList.toggle('is-visible', arrowsShouldBeVisible);
                 nextButton.classList.toggle('is-visible', arrowsShouldBeVisible);
             });
-        }, { threshold: 0.5 });
-        
+        }, { threshold: 0.3 });
+
         const scrollObserver = new IntersectionObserver((entries) => {
             if (mode === 'portrait') {
-                entries.forEach(entry => {
+                for (const entry of entries) {
                     if (entry.isIntersecting) {
                         currentIndex = parseInt(entry.target.dataset.index);
                         slides.forEach(s => s.classList.remove('slide-active'));
                         entry.target.classList.add('slide-active');
+                        break; // Only update for the first one that intersects
                     }
-                });
+                }
             }
         }, { root: viewport, threshold: 0.7 });
         
         // --- INITIALIZE ---
-        handleModeChange(); // Set initial mode
+        handleResize();
         arrowObserver.observe(workSection);
         slides.forEach(slide => scrollObserver.observe(slide));
-        updateActiveSlide(true); // Initial state set instantly
+        updateView(true);
 
-        window.addEventListener('resize', handleModeChange);
+        window.addEventListener('resize', handleResize);
         
         document.querySelectorAll('.nav-link').forEach(link => { link.addEventListener('click', (e) => { e.preventDefault(); document.querySelector(link.getAttribute('href')).scrollIntoView({ behavior: 'smooth' }); }); });
         const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
