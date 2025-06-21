@@ -31,19 +31,19 @@
                 flex-direction: column; 
                 width: 100%; 
                 box-sizing: border-box;
+                /* --- FIX #1: Use flexbox for robust centering --- */
+                align-items: center; 
             }
             
             #work .category-item {
                 width: 75% !important; 
-                margin: 20px auto; 
+                /* --- FIX #2: Remove horizontal auto margin --- */
+                margin: 20px 0; 
                 flex-shrink: 0;
                 box-sizing: border-box;
-                /* --- FIX #1: THE CRITICAL FIX --- */
-                /* This forces the item to obey its 'width' property instead of expanding to fit its content. */
                 min-width: 0;
             }
             
-            /* --- FIX #2: MORE AGGRESSIVE TEXT WRAPPING --- */
             #work .item-caption h3 {
                 white-space: normal;
                 overflow-wrap: break-word;
