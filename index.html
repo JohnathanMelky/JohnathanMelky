@@ -154,9 +154,8 @@
             .main-nav ul { flex-direction: column; text-align: center; gap: 2.5rem; }
             .main-nav a { font-size: 2rem; }
 
-            /* --- MOBILE CAROUSEL - FULL BLEED PEEKING EFFECT --- */
+            /* --- MOBILE CAROUSEL - FINAL FIX --- */
             .carousel-container {
-                /* This makes the container span the full screen width */
                 width: 100vw;
                 position: relative;
                 left: 50%;
@@ -165,13 +164,21 @@
             .carousel-arrow { display: none; }
             .carousel-viewport {
                 width: 100%;
-                height: calc((80vw / 16) * 9); /* Height based on the new slide width */
+                height: calc((80vw / 16) * 9);
                 mask-image: none;
                 -webkit-mask-image: none;
+                /* CRITICAL FIX #1: Prevents page navigation swipe glitch */
+                touch-action: pan-y;
+                cursor: grab;
+            }
+            .carousel-viewport:active {
+                cursor: grabbing;
             }
             .category-item {
-                width: 80vw; /* Make slides smaller than viewport to show peeking sides */
-                margin: 0 2.5vw; /* Create space between slides */
+                width: 80vw;
+                margin: 0 2.5vw;
+                /* CRITICAL FIX #2: Removes padding that caused top/bottom cropping */
+                padding: 0;
             }
 
             /* --- Mobile Hero --- */
@@ -217,7 +224,6 @@
                 </div>
                 <div class="hero-skills">
                     <div class="profile-picture-container reveal-line">
-                        <!-- Make sure this image exists in ./images/profile-picture.jpg -->
                         <img src="./images/profile-picture.jpg" alt="A picture of Johnathan Melky">
                     </div>
                     <p class="profile-name reveal-line">Johnathan Melky</p>
@@ -278,61 +284,16 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // =================================================================================
-        // === YOUR PORTFOLIO CONFIGURATION - THIS IS THE ONLY PLACE YOU NEED TO EDIT! ===
-        // =================================================================================
-        // INSTRUCTIONS:
-        // 1. Create an 'images' folder next to this index.html file.
-        // 2. Inside 'images', create a 'category-thumbnails' folder and your project folders (e.g., 'project-Electronics').
-        // 3. Place your images in the correct folders. Project images MUST be named '01.jpg', '02.jpg', etc.
-        // 4. Update the 'imageCount' for each category below to match the number of images you have.
-
+        // === YOUR PORTFOLIO CONFIGURATION ===
         const portfolioData = [
-            {
-                id: "Electronics",
-                title: "Electronics: Gadgets & Gizmos",
-                thumbnail: "./images/category-thumbnails/Electronics.jpg",
-                folder: "./images/project-Electronics/",
-                imageCount: 15,
-                extension: "jpg"
-            },
-            {
-                id: "props",
-                title: "Props & Creatures: Game Assets",
-                thumbnail: "./images/category-thumbnails/props.jpg",
-                folder: "./images/project-props/",
-                imageCount: 15,
-                extension: "jpg"
-            },
-            {
-                id: "environments",
-                title: "Environment Design: 'The Lost Valley'",
-                thumbnail: "./images/category-thumbnails/environments.jpg",
-                folder: "./images/project-environments/",
-                imageCount: 15,
-                extension: "jpg"
-            },
-            {
-                id: "product-design",
-                title: "Product Design: 'Chronos Watch'",
-                thumbnail: "./images/category-thumbnails/product-design.jpg",
-                folder: "./images/project-product-design/",
-                imageCount: 15,
-                extension: "jpg"
-            },
-            {
-                id: "Web-Logo-Design",
-                title: "Web & Logo Design: Branding",
-                thumbnail: "./images/category-thumbnails/Web-&-Logo-Design.jpg",
-                folder: "./images/project-Web-Logo-Design/",
-                imageCount: 15,
-                extension: "jpg"
-            }
+            { id: "Electronics", title: "Electronics: Gadgets & Gizmos", thumbnail: "./images/category-thumbnails/Electronics.jpg", folder: "./images/project-Electronics/", imageCount: 15, extension: "jpg" },
+            { id: "props", title: "Props & Creatures: Game Assets", thumbnail: "./images/category-thumbnails/props.jpg", folder: "./images/project-props/", imageCount: 15, extension: "jpg" },
+            { id: "environments", title: "Environment Design: 'The Lost Valley'", thumbnail: "./images/category-thumbnails/environments.jpg", folder: "./images/project-environments/", imageCount: 15, extension: "jpg" },
+            { id: "product-design", title: "Product Design: 'Chronos Watch'", thumbnail: "./images/category-thumbnails/product-design.jpg", folder: "./images/project-product-design/", imageCount: 15, extension: "jpg" },
+            { id: "Web-Logo-Design", title: "Web & Logo Design: Branding", thumbnail: "./images/category-thumbnails/Web-&-Logo-Design.jpg", folder: "./images/project-Web-Logo-Design/", imageCount: 15, extension: "jpg" }
         ];
 
-        // ==================================================================
-        // === CORE WEBSITE LOGIC (No need to edit below this line) ===
-        // ==================================================================
+        // === CORE WEBSITE LOGIC (No edits needed below) ===
         const track = document.querySelector('.carousel-track');
         if (track) {
             portfolioData.forEach(project => {
@@ -344,7 +305,6 @@
             });
         }
         
-        // --- Mobile Navigation ---
         const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
         const mainNav = document.querySelector('.main-nav');
         mobileNavToggle.addEventListener('click', () => {
@@ -399,12 +359,10 @@
             prevButton.addEventListener('click', () => moveTo(currentIndex - 1));
             window.addEventListener('resize', () => updateCarousel(true));
 
-            // --- IMPROVED CAROUSEL SWIPE LOGIC ---
-            let isDragging = false, startX, currentTranslate, animationFrame, movedBy = 0;
+            // --- CAROUSEL SWIPE LOGIC ---
+            let isDragging = false, startX, currentTranslate, movedBy = 0;
             
-            function getPositionX(e) {
-                return e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
-            }
+            function getPositionX(e) { return e.type.includes('mouse') ? e.pageX : e.touches[0].clientX; }
 
             function touchStart(e) {
                 isDragging = true;
@@ -412,8 +370,7 @@
                 const transformMatrix = new WebKitCSSMatrix(window.getComputedStyle(track).transform);
                 currentTranslate = transformMatrix.m41;
                 track.classList.add('no-transition');
-                cancelAnimationFrame(animationFrame);
-                movedBy = 0; // Reset movement
+                movedBy = 0;
             }
 
             function touchMove(e) {
@@ -426,29 +383,18 @@
             function touchEnd() {
                 if (!isDragging) return;
                 isDragging = false;
-                
                 track.classList.remove('no-transition');
-
-                // If swiped more than 50px, move to next/prev slide
-                if (movedBy < -50) {
-                    moveTo(currentIndex + 1);
-                } else if (movedBy > 50) {
-                    moveTo(currentIndex - 1);
-                } else {
-                    // Otherwise, snap back to the current slide
-                    updateCarousel();
-                }
+                if (movedBy < -50) moveTo(currentIndex + 1);
+                else if (movedBy > 50) moveTo(currentIndex - 1);
+                else updateCarousel();
             }
 
             carouselViewport.addEventListener('mousedown', touchStart);
             carouselViewport.addEventListener('touchstart', touchStart, { passive: true });
-
             carouselViewport.addEventListener('mousemove', touchMove);
             carouselViewport.addEventListener('touchmove', touchMove, { passive: true });
-
             document.addEventListener('mouseup', touchEnd);
             document.addEventListener('touchend', touchEnd);
-
 
             // --- Lightbox Logic ---
             const lightboxOverlay = document.getElementById('lightbox-overlay');
@@ -474,16 +420,13 @@
             const showLightbox = (projectId) => {
                 const project = portfolioData.find(p => p.id === projectId);
                 if (!project || !project.imageCount) return;
-
                 currentGalleryImages = [];
                 for (let i = 1; i <= project.imageCount; i++) {
                     const number = String(i).padStart(2, '0');
                     currentGalleryImages.push(`${project.folder}${number}.${project.extension}`);
                 }
-
                 currentGalleryIndex = 0;
                 lightboxCaption.textContent = project.title.split(':')[0];
-                
                 updateLightboxImage();
                 lightboxOverlay.classList.add('visible');
                 document.body.style.overflow = 'hidden';
@@ -495,15 +438,10 @@
             document.getElementById('lightbox-prev').addEventListener('click', () => { currentGalleryIndex = (currentGalleryIndex - 1 + currentGalleryImages.length) % currentGalleryImages.length; updateLightboxImage(); });
             
             slides.forEach((slide, index) => {
-                slide.addEventListener('click', (e) => { 
-                    // Only open lightbox if it wasn't a significant drag
+                slide.addEventListener('click', () => { 
                     if (Math.abs(movedBy) > 10) return;
-
-                    if (index === currentIndex) {
-                        showLightbox(slide.dataset.projectId);
-                    } else {
-                        moveTo(index);
-                    }
+                    if (index === currentIndex) showLightbox(slide.dataset.projectId);
+                    else moveTo(index);
                 });
             });
             
