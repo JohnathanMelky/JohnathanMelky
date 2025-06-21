@@ -12,6 +12,7 @@
         :root { --color-darkest:#101010; --color-mid:#181818; --accent-color:#FFC700; --font-heading:'Poppins', sans-serif; --primary-text-color:#EAEAEA; --secondary-text-color:#999; --border-color:#303030; }
         html { scroll-behavior: smooth; }
         body { font-family:'Inter', sans-serif; margin: 0; color: var(--primary-text-color); line-height: 1.7; background-color: var(--color-darkest); overflow-x: hidden; }
+        body.no-scroll { overflow: hidden; }
         #spotlight-effect { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; background: radial-gradient(circle 500px at var(--x) var(--y), rgba(255, 199, 0, 0.08), transparent 80%); z-index: -1; }
 
         .main-header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 1rem 5%; background: rgba(16, 16, 16, 0.7); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-color); }
@@ -42,7 +43,7 @@
 
         /* DESKTOP: Horizontal Carousel */
         @media (min-width: 769px) {
-            .carousel-viewport { overflow: hidden; height: 30vw; max-height: 450px; }
+            .carousel-viewport { overflow: hidden; height: clamp(250px, 30vw, 450px); }
             .carousel-track { flex-direction: row; position: absolute; left: 0; top: 0; height: 100%; transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
             .category-item { width: 50vw; max-width: 750px; height: 100%; flex-shrink: 0; margin: 0 1vw; transform: scale(0.85); opacity: 0.4; transition: opacity 0.6s, transform 0.6s; }
             .carousel-arrow { z-index: 50; background: rgba(30, 30, 30, 0.7); color: #fff; border: 1px solid var(--border-color); width: 50px; height: 50px; border-radius: 50%; backdrop-filter: blur(5px); position: absolute; top: 50%; transform: translateY(-50%); transition: all 0.3s; }
@@ -57,8 +58,7 @@
             .carousel-viewport::-webkit-scrollbar { display: none; }
             .carousel-track { flex-direction: column; align-items: center; gap: 3rem; padding: 15vh 0; }
             .category-item { 
-                width: 100%;
-                max-width: 400px;
+                width: 100%; max-width: 400px;
                 flex-shrink: 0; aspect-ratio: 16 / 9; scroll-snap-align: center;
                 opacity: 0.6; transform: scale(0.9); transition: opacity 0.5s, transform 0.5s;
             }
@@ -91,6 +91,15 @@
         .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--accent-color); }
         .btn-submit { grid-column: 1 / -1; justify-self: start; padding: 1rem 2.5rem; background: var(--accent-color); color: #000; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; }
         
+        .lightbox-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 2000; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; backdrop-filter: blur(5px); }
+        .lightbox-overlay.visible { opacity: 1; pointer-events: auto; }
+        .lightbox-content { position: relative; max-width: 95vw; max-height: 95vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        #lightbox-img { max-width: 80vw; max-height: 75vh; }
+        #lightbox-counter { color: var(--secondary-text-color); background: rgba(0,0,0,0.5); padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.9rem; margin-bottom: 1rem; }
+        .lightbox-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.1); border: none; color: #fff; width: 50px; height: 100px; font-size: 2rem; cursor: pointer; }
+        #lightbox-prev { left: 1rem; } #lightbox-next { right: 1rem; }
+        .lightbox-close-btn { position: absolute; top: 1rem; right: 1rem; font-size: 3rem; color: #fff; cursor: pointer; line-height: 1; }
+
         @media (max-width: 900px) { h1 { font-size: 3rem; } .hero-layout { grid-template-columns: 1fr; text-align: center; } .intro-paragraph { margin: 0 auto; } }
         @media (max-width: 768px) {
             h1 { font-size: 2.5rem; } .contact-form { grid-template-columns: 1fr; }
@@ -110,17 +119,17 @@
         <section id="contact" class="page-section"><div class="content-wrapper"><h1 class="centered-title">Let's Create Together</h1><p class="subtitle">Have a project in mind? I'm available for commissions and collaborations.</p><form class="contact-form" action="#" method="post"><div class="form-group"><label for="name">Your Name</label><input type="text" id="name" name="name" required></div><div class="form-group"><label for="email">Your Email</label><input type="email" id="email" name="email" required></div><div class="form-group full-width"><label for="message">Your Message</label><textarea id="message" name="message" rows="5" required></textarea></div><button type="submit" class="btn-submit">Send Message</button></form></div></section>
     </main>
     <footer><p>© 2025 Johnathan Melky. All Rights Reserved.</p></footer>
-    <div id="lightbox-overlay" style="display:none;"><div class="lightbox-content"><img id="lightbox-img" src=""><span class="lightbox-close-btn">×</span></div></div>
+    <div id="lightbox-overlay" class="lightbox-overlay"><div class="lightbox-content"><div id="lightbox-counter"></div><img id="lightbox-img" src="" alt="Artwork"><button id="lightbox-prev" class="lightbox-arrow"><</button><button id="lightbox-next" class="lightbox-arrow">></button></div><span class="lightbox-close-btn">×</span></div>
     
     <script>
     document.addEventListener('DOMContentLoaded', () => {
         // --- DATA & CONFIG ---
         const portfolioData = [
-            { id: "props", title: "Props & Creatures", thumbnail: "./images/category-thumbnails/props.jpg" },
-            { id: "product-design", title: "Product Design", thumbnail: "./images/category-thumbnails/product-design.jpg" },
-            { id: "environments", title: "Environment Design", thumbnail: "./images/category-thumbnails/environments.jpg" },
-            { id: "Web-Logo-Design", title: "Web & Logo Design", thumbnail: "./images/category-thumbnails/Web-&-Logo-Design.jpg" },
-            { id: "Electronics", title: "Electronics", thumbnail: "./images/category-thumbnails/Electronics.jpg" }
+            { id: "props", title: "Props & Creatures", thumbnail: "./images/category-thumbnails/props.jpg", folder:"./images/project-props/", imageCount: 15, extension: "jpg" },
+            { id: "product-design", title: "Product Design", thumbnail: "./images/category-thumbnails/product-design.jpg", folder:"./images/project-product-design/", imageCount: 15, extension: "jpg" },
+            { id: "environments", title: "Environment Design", thumbnail: "./images/category-thumbnails/environments.jpg", folder:"./images/project-environments/", imageCount: 15, extension: "jpg" },
+            { id: "Web-Logo-Design", title: "Web & Logo Design", thumbnail: "./images/category-thumbnails/Web-&-Logo-Design.jpg", folder:"./images/project-Web-Logo-Design/", imageCount: 15, extension: "jpg" },
+            { id: "Electronics", title: "Electronics", thumbnail: "./images/category-thumbnails/Electronics.jpg", folder:"./images/project-Electronics/", imageCount: 15, extension: "jpg" }
         ];
         const startingProjectId = "environments";
 
@@ -132,8 +141,13 @@
         const workSection = document.getElementById('work');
         const slides = [];
         let currentIndex = portfolioData.findIndex(p => p.id === startingProjectId);
-        let isMobile = window.innerWidth <= 768;
+        let mode = getMode();
         let pointerDownPos = null;
+
+        function getMode() {
+            if (window.innerWidth <= 768) return 'mobile';
+            return 'desktop';
+        }
 
         // --- BUILD SLIDES ---
         portfolioData.forEach((project, index) => {
@@ -149,7 +163,7 @@
         function updateActiveSlide(isInstant = false) {
             slides.forEach((slide, index) => slide.classList.toggle('slide-active', index === currentIndex));
 
-            if (!isMobile) {
+            if (mode === 'desktop') {
                 track.style.transition = isInstant ? 'none' : 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)';
                 const activeSlide = slides[currentIndex];
                 if (!activeSlide) return;
@@ -162,11 +176,49 @@
             if (index < 0 || index >= slides.length) return;
             currentIndex = index;
 
-            if (isMobile) {
+            if (mode === 'mobile') {
                 slides[index].scrollIntoView({ behavior: 'smooth', block: 'center' });
             } else {
                 updateActiveSlide();
             }
+        }
+
+        function showLightbox() {
+            const project = portfolioData[currentIndex];
+            if (!project || !project.imageCount) return;
+            
+            const overlay = document.querySelector('#lightbox-overlay');
+            const counter = document.querySelector('#lightbox-counter');
+            const imgEl = document.querySelector('#lightbox-img');
+            const lbPrev = document.querySelector('#lightbox-prev');
+            const lbNext = document.querySelector('#lightbox-next');
+            const lbClose = document.querySelector('.lightbox-close-btn');
+
+            let currentImageIndex = 0;
+            const images = Array.from({ length: project.imageCount }, (_, i) => 
+                `${project.folder}${String(i + 1).padStart(2, '0')}.${project.extension}`
+            );
+
+            function updateImage() {
+                imgEl.src = images[currentImageIndex];
+                counter.textContent = `${currentImageIndex + 1} / ${images.length}`;
+            }
+
+            lbPrev.onclick = () => {
+                currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+                updateImage();
+            };
+            lbNext.onclick = () => {
+                currentImageIndex = (currentImageIndex + 1) % images.length;
+                updateImage();
+            };
+            
+            updateImage();
+            overlay.classList.add('visible');
+
+            const closeLightbox = () => overlay.classList.remove('visible');
+            lbClose.onclick = closeLightbox;
+            overlay.onclick = (e) => { if (e.target === overlay) closeLightbox(); };
         }
         
         // --- EVENT LISTENERS ---
@@ -188,8 +240,7 @@
                 if (slide) {
                     const tappedIndex = parseInt(slide.dataset.index);
                     if (tappedIndex === currentIndex) {
-                        console.log("Open lightbox for " + portfolioData[currentIndex].id);
-                        // Future lightbox logic here
+                        showLightbox();
                     } else {
                         moveTo(tappedIndex);
                     }
@@ -200,14 +251,14 @@
 
         // --- OBSERVERS & BREAKPOINT MANAGEMENT ---
         function handleResize() {
-            const newIsMobile = window.innerWidth <= 768;
-            if (isMobile === newIsMobile) return; // No change in mode
+            const newMode = getMode();
+            if (mode === newMode) return;
             
-            isMobile = newIsMobile;
-            prevButton.innerHTML = isMobile ? '▲' : '<';
-            nextButton.innerHTML = isMobile ? '▼' : '>';
+            mode = newMode;
+            prevButton.innerHTML = (mode === 'mobile') ? '▲' : '<';
+            nextButton.innerHTML = (mode === 'mobile') ? '▼' : '>';
             track.style.transition = 'none';
-            if (!isMobile) viewport.scrollTo(0, 0);
+            if (mode === 'desktop') viewport.scrollTo(0, 0);
             updateActiveSlide(true);
         }
         
@@ -220,17 +271,16 @@
         }, { threshold: 0.3 });
 
         const scrollObserver = new IntersectionObserver((entries) => {
-            if (isMobile) {
+            if (mode === 'mobile') {
                 for (const entry of entries) {
                     if (entry.isIntersecting) {
                         currentIndex = parseInt(entry.target.dataset.index);
-                        slides.forEach(s => s.classList.remove('slide-active'));
-                        entry.target.classList.add('slide-active');
-                        break; 
+                        updateActiveSlide();
+                        break;
                     }
                 }
             }
-        }, { root: isMobile ? viewport : null, threshold: 0.7 });
+        }, { root: viewport, threshold: 0.7 });
         
         // --- INITIALIZE ---
         handleResize();
