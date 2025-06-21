@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <!-- NEW: Styles for vertical carousel on mobile -->
+    <!-- Styles for vertical carousel on mobile -->
     <style>
         @media (max-width: 768px) {
             #work .carousel-container {
@@ -25,6 +25,7 @@
             #work .carousel-track {
                 /* The JS will handle transform, CSS sets the direction */
                 flex-direction: column; 
+                width: 100%; /* <<< THE FIX IS HERE: Constrain track width */
             }
             
             #work .category-item {
