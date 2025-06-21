@@ -9,34 +9,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
     
     <style>
-        /* --- GLOBAL & THEME --- */
-        :root { 
-            --color-darkest: #101010; 
-            --color-mid: #181818; 
-            --color-lightest: #202020;
-            --accent-color: #FFC700; 
-            --glow-color: rgba(255, 199, 0, 0.7);
-            --font-heading: 'Poppins', sans-serif; 
-            --font-body: 'Inter', sans-serif;
-            --primary-text-color: #EAEAEA; 
-            --secondary-text-color: #999; 
-            --border-color: #303030;
-        }
+        :root { --color-darkest:#101010; --color-mid:#181818; --color-lightest:#202020; --accent-color:#FFC700; --glow-color:rgba(255, 199, 0, 0.7); --font-heading:'Poppins', sans-serif; --font-body:'Inter', sans-serif; --primary-text-color:#EAEAEA; --secondary-text-color:#999; --border-color:#303030; }
         html { scroll-behavior: smooth; }
-        body { 
-            font-family: var(--font-body); 
-            margin: 0; 
-            color: var(--primary-text-color);
-            line-height: 1.7; 
-            background-color: var(--color-darkest);
-            overflow-x: hidden;
-        }
+        body { font-family: var(--font-body); margin: 0; color: var(--primary-text-color); line-height: 1.7; background-color: var(--color-darkest); overflow-x: hidden; }
         body.no-scroll { overflow: hidden; }
-
-        /* === ANIMATIONS & EFFECTS === */
         #spotlight-effect { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; background: radial-gradient(circle 500px at var(--x) var(--y), rgba(255, 199, 0, 0.08), transparent 80%); z-index: -1; transition: background 0.1s ease-out; }
 
-        /* --- LAYOUT & TYPOGRAPHY --- */
         .main-header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 1rem 5%; background: rgba(16, 16, 16, 0.7); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-color); }
         .header-content { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto; }
         .logo { font-size: 1.8rem; font-family: var(--font-heading); text-shadow: 0 0 5px var(--glow-color); }
@@ -49,15 +27,14 @@
         .page-section { min-height: 100vh; padding: 8rem 5%; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         #work { padding-top: 8rem; padding-bottom: 8rem; min-height: auto; }
         .content-wrapper { width: 100%; max-width: 1200px; }
-        h1 { font-family: var(--font-heading); font-size: 4rem; line-height: 1.2; margin-bottom: 1rem; color: #fff; }
+        h1 { font-family: var(--font-heading); font-size: 4rem; line-height: 1.2; margin-bottom: 1rem; }
         .accent-text { color: var(--accent-color); text-shadow: 0 0 10px var(--glow-color); }
         .centered-title { text-align: center; }
-
+        
         /* --- CAROUSEL / SCROLLING LIST --- */
         .carousel-container { position: relative; width: 100%; margin-top: 3rem; user-select: none; }
         .carousel-viewport { position: relative; }
         .carousel-track { display: flex; align-items: center; }
-        
         .category-item-inner { width: 100%; height: 100%; position: relative; border-radius: 12px; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6); }
         .category-item img { display: block; width: 100%; height: 100%; object-fit: cover; }
         .item-caption { position: absolute; bottom: 0; left: 0; padding: 1rem 1.5rem; background: linear-gradient(to top, rgba(0,0,0,0.85) 10%, transparent); width: calc(100% - 3rem); border-radius: 0 0 12px 12px; }
@@ -68,30 +45,36 @@
             .carousel-viewport { overflow: hidden; height: 28.125vw; max-height: 422px; -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent); mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent); }
             .carousel-track { flex-direction: row; position: absolute; left: 0; top: 0; height: 100%; transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
             .category-item { width: 50vw; max-width: 750px; flex-shrink: 0; aspect-ratio: 16 / 9; margin: 0 1vw; transform: scale(0.85); opacity: 0.4; transition: opacity 0.6s ease, transform 0.6s ease; box-sizing: border-box; }
-            .category-item-inner { border: 2px solid transparent; }
             .slide-active { transform: scale(1); opacity: 1; }
-            .slide-active .category-item-inner { border-color: var(--accent-color); box-shadow: 0 0 15px var(--glow-color), 0 10px 30px rgba(0,0,0,0.5); }
+            .slide-active .category-item-inner { border: 2px solid var(--accent-color); box-shadow: 0 0 15px var(--glow-color), 0 10px 30px rgba(0,0,0,0.5); }
             .carousel-arrow { z-index: 50; background: rgba(30, 30, 30, 0.7); color: #fff; border: 1px solid var(--border-color); width: 50px; height: 50px; border-radius: 50%; cursor: pointer; font-size: 1.5rem; backdrop-filter: blur(5px); position: absolute; top: 50%; transform: translateY(-50%); transition: all 0.3s ease; }
             #prev-btn { left: 2%; } #next-btn { right: 2%; }
             #prev-btn:hover, #next-btn:hover { background: var(--accent-color); color: var(--color-darkest); transform: translateY(-50%) scale(1.1); }
         }
 
-        /* MOBILE: Vertical Scrolling List */
-        @media (max-width: 768px) {
-            #work .content-wrapper { max-width: none; padding-left: 0; padding-right: 0; }
-            #work .centered-title { padding-left: 20px; padding-right: 20px; }
+        /* MOBILE (PORTRAIT): Vertical List */
+        @media (max-width: 768px) and (orientation: portrait) {
             .carousel-container { margin-top: 2rem; }
             .carousel-viewport { overflow-y: scroll; scroll-snap-type: y mandatory; height: 75vh; scrollbar-width: none; -ms-overflow-style: none; }
             .carousel-viewport::-webkit-scrollbar { display: none; }
             .carousel-track { flex-direction: column; align-items: center; gap: 4rem; padding: 15vh 0; }
-            .category-item {
-                /* FIX: Slightly smaller to guarantee no side cropping */
-                width: 88vw;
-                flex-shrink: 0; aspect-ratio: 16 / 9; scroll-snap-align: center; opacity: 0.6; transform: scale(0.9); transition: opacity 0.5s, transform 0.5s, box-shadow 0.5s;
-            }
+            .category-item { width: 100%; max-width: 400px; /* Limit width but allow it to shrink */ flex-shrink: 0; aspect-ratio: 16 / 9; scroll-snap-align: center; opacity: 0.6; transform: scale(0.9); transition: opacity 0.5s, transform 0.5s, box-shadow 0.5s; }
+        }
+
+        /* MOBILE (LANDSCAPE): Horizontal Carousel */
+        @media (max-width: 900px) and (orientation: landscape) {
+            #work { padding-top: 4rem; padding-bottom: 4rem; }
+            .carousel-viewport { overflow: hidden; height: 75vh; }
+            .carousel-track { flex-direction: row; height: 100%; transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
+            .category-item { width: auto; height: 100%; flex-shrink: 0; aspect-ratio: 16/9; margin: 0 1vw; transform: scale(0.85); opacity: 0.4; transition: opacity 0.6s ease, transform 0.6s ease; box-sizing: border-box; }
+        }
+        
+        /* MOBILE SHARED STYLES */
+        @media (max-width: 900px) {
             .slide-active { opacity: 1; transform: scale(1); box-shadow: 0 0 25px rgba(255, 199, 0, 0.4); border-radius: 12px; }
             .carousel-arrow {
-                position: fixed; right: 20px; z-index: 100; width: 60px; height: 60px;
+                position: fixed; right: 20px; z-index: 100;
+                width: 60px; height: 60px;
                 background: rgba(20, 20, 20, 0.8); border: 1px solid var(--border-color);
                 border-radius: 50%; font-size: 2rem; line-height: 60px; text-align: center;
                 backdrop-filter: blur(5px); box-shadow: 0 4px 15px rgba(0,0,0,0.3);
@@ -100,7 +83,10 @@
             }
             .carousel-arrow.is-visible { opacity: 1; pointer-events: auto; }
             .carousel-arrow:active { transform: scale(0.9); }
-            #prev-btn { top: 20vh; } #next-btn { bottom: 20vh; }
+            /* Vertical arrows for portrait */
+            @media (orientation: portrait) { #prev-btn { top: 20vh; } #next-btn { bottom: 20vh; } }
+             /* Horizontal arrows for landscape */
+            @media (orientation: landscape) { #prev-btn { top: 50%; left: 20px; transform: translateY(-50%); } #next-btn { top: 50%; right: 20px; transform: translateY(-50%); } }
         }
 
         /* OTHER STYLES & RESPONSIVE */
@@ -135,70 +121,41 @@
 </head>
 <body>
     <div id="spotlight-effect"></div>
-    <header class="main-header">
-        <div class="header-content">
-            <div class="logo">Johnathan Melky</div>
-            <nav class="main-nav">
-                <ul>
-                    <li><a href="#about" class="nav-link">About</a></li>
-                    <li><a href="#work" class="nav-link">Work</a></li>
-                    <li><a href="#contact" class="nav-link">Contact</a></li>
-                </ul>
-            </nav>
-            <button class="mobile-nav-toggle" aria-label="Open navigation menu">☰</button>
-        </div>
-    </header>
+    <header class="main-header"><div class="header-content"><div class="logo">Johnathan Melky</div><nav class="main-nav"><ul><li><a href="#about" class="nav-link">About</a></li><li><a href="#work" class="nav-link">Work</a></li><li><a href="#contact" class="nav-link">Contact</a></li></ul></nav><button class="mobile-nav-toggle" aria-label="Open navigation menu">☰</button></div></header>
     <main>
-        <section id="about" class="page-section">
-            <div class="content-wrapper hero-layout">
-                <div class="hero-text"><h1>I build <span class="accent-text">immersive 3D worlds</span> and bring digital products to life.</h1><p class="intro-paragraph">As a 3D Generalist with more than 4 years of experience, I specialize in crafting everything from vast digital environments to detailed product visualizations, turning creative concepts into stunning, tangible realities.</p></div>
-                <div class="hero-skills"><div class="profile-picture-container"><img src="./images/profile-picture.jpg" alt="A picture of Johnathan Melky"></div><p class="profile-name">Johnathan Melky</p><ul class="skills-list"><li>Blender</li><li>ZBrush</li><li>Substance Painter</li><li>Unreal Engine</li><li>Hard-Surface Modeling</li><li>Character Art</li></ul></div>
-            </div>
-        </section>
-        <section id="work" class="page-section">
-            <div class="content-wrapper">
-                <h1 class="centered-title">Selected Works</h1>
-                <div class="carousel-container">
-                    <button id="prev-btn" class="carousel-arrow"><</button>
-                    <div class="carousel-viewport"><div class="carousel-track"></div></div>
-                    <button id="next-btn" class="carousel-arrow">></button>
-                </div>
-            </div>
-        </section>
-        <section id="contact" class="page-section">
-            <div class="content-wrapper">
-                <h1 class="centered-title">Let's Create Together</h1><p class="subtitle">Have a project in mind? I'm available for commissions and collaborations.</p>
-                <form class="contact-form" action="#" method="post"><div class="form-group"><label for="name">Your Name</label><input type="text" id="name" name="name" required></div><div class="form-group"><label for="email">Your Email</label><input type="email" id="email" name="email" required></div><div class="form-group full-width"><label for="message">Your Message</label><textarea id="message" name="message" rows="5" required></textarea></div><button type="submit" class="btn-submit">Send Message</button></form>
-            </div>
-        </section>
+        <section id="about" class="page-section"><div class="content-wrapper hero-layout"><div class="hero-text"><h1>I build <span class="accent-text">immersive 3D worlds</span> and bring digital products to life.</h1><p class="intro-paragraph">As a 3D Generalist with more than 4 years of experience, I specialize in crafting everything from vast digital environments to detailed product visualizations, turning creative concepts into stunning, tangible realities.</p></div><div class="hero-skills"><div class="profile-picture-container"><img src="./images/profile-picture.jpg" alt="A picture of Johnathan Melky"></div><p class="profile-name">Johnathan Melky</p><ul class="skills-list"><li>Blender</li><li>ZBrush</li><li>Substance Painter</li><li>Unreal Engine</li><li>Hard-Surface Modeling</li><li>Character Art</li></ul></div></div></section>
+        <section id="work" class="page-section"><div class="content-wrapper"><h1 class="centered-title">Selected Works</h1><div class="carousel-container"><button id="prev-btn" class="carousel-arrow"><</button><div class="carousel-viewport"><div class="carousel-track"></div></div><button id="next-btn" class="carousel-arrow">></button></div></div></section>
+        <section id="contact" class="page-section"><div class="content-wrapper"><h1 class="centered-title">Let's Create Together</h1><p class="subtitle">Have a project in mind? I'm available for commissions and collaborations.</p><form class="contact-form" action="#" method="post"><div class="form-group"><label for="name">Your Name</label><input type="text" id="name" name="name" required></div><div class="form-group"><label for="email">Your Email</label><input type="email" id="email" name="email" required></div><div class="form-group full-width"><label for="message">Your Message</label><textarea id="message" name="message" rows="5" required></textarea></div><button type="submit" class="btn-submit">Send Message</button></form></div></section>
     </main>
     <footer><p>© 2025 Johnathan Melky. All Rights Reserved.</p></footer>
     <div id="lightbox-overlay" style="display:none;"><div class="lightbox-content"><img id="lightbox-img" src=""><span class="lightbox-close-btn">×</span></div></div>
     
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // --- DATA ---
-        // FIX: Reordered to put 'environments' in the middle for easy desktop default
+        // --- DATA & CONFIG ---
         const portfolioData = [
-            { id: "Electronics", title: "Electronics", thumbnail: "./images/category-thumbnails/Electronics.jpg"},
-            { id: "props", title: "Props & Creatures", thumbnail: "./images/category-thumbnails/props.jpg"},
-            { id: "environments", title: "Environment Design", thumbnail: "./images/category-thumbnails/environments.jpg"},
-            { id: "product-design", title: "Product Design", thumbnail: "./images/category-thumbnails/product-design.jpg"},
-            { id: "Web-Logo-Design", title: "Web & Logo Design", thumbnail: "./images/category-thumbnails/Web-&-Logo-Design.jpg"}
+            { id: "Electronics", title: "Electronics", thumbnail: "./images/category-thumbnails/Electronics.jpg", folder: "./images/project-Electronics/", imageCount: 15 },
+            { id: "props", title: "Props & Creatures", thumbnail: "./images/category-thumbnails/props.jpg", folder: "./images/project-props/", imageCount: 15 },
+            { id: "environments", title: "Environment Design", thumbnail: "./images/category-thumbnails/environments.jpg", folder: "./images/project-environments/", imageCount: 15 },
+            { id: "product-design", title: "Product Design", thumbnail: "./images/category-thumbnails/product-design.jpg", folder: "./images/project-product-design/", imageCount: 15 },
+            { id: "Web-Logo-Design", title: "Web & Logo Design", thumbnail: "./images/category-thumbnails/Web-&-Logo-Design.jpg", folder: "./images/project-Web-Logo-Design/", imageCount: 15 }
         ];
+        const startingProjectId = "environments";
 
-        // --- ELEMENTS ---
+        // --- GLOBAL ELEMENTS ---
         const track = document.querySelector('.carousel-track');
         const prevButton = document.getElementById('prev-btn');
         const nextButton = document.getElementById('next-btn');
         const viewport = document.querySelector('.carousel-viewport');
         const workSection = document.getElementById('work');
         const slides = [];
-        let currentIndex = 0;
-        let isMobile = window.innerWidth <= 768;
+        let currentIndex = portfolioData.findIndex(p => p.id === startingProjectId);
+        if (currentIndex === -1) currentIndex = Math.floor(portfolioData.length / 2);
+        
+        let isMobile, isPortrait;
 
         // --- POPULATE SLIDES ---
-        portfolioData.forEach(project => {
+        portfolioData.forEach((project, index) => {
             const slide = document.createElement('div');
             slide.className = 'category-item';
             slide.dataset.projectId = project.id;
@@ -207,74 +164,98 @@
             slides.push(slide);
         });
 
-        function initDesktop() {
-            isMobile = false;
-            prevButton.innerHTML = '<'; nextButton.innerHTML = '>';
-            // FIX: Set default to the middle slide
-            currentIndex = Math.floor(slides.length / 2);
-
-            const updateCarousel = (instant = false) => {
-                track.style.transition = instant ? 'none' : 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)';
+        // --- MODE-SPECIFIC LOGIC ---
+        function updateCarousel() {
+            if (isMobile && isPortrait) {
+                // Portrait mode uses scroll snapping, managed by IntersectionObserver
+                slides.forEach((slide, index) => slide.classList.toggle('slide-active', index === currentIndex));
+            } else {
+                // Desktop and Landscape use transform
+                track.style.transition = 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)';
                 const activeSlide = slides[currentIndex];
                 const offset = (viewport.offsetWidth / 2) - (activeSlide.offsetWidth / 2) - activeSlide.offsetLeft;
                 track.style.transform = `translateX(${offset}px)`;
                 slides.forEach(s => s.classList.remove('slide-active'));
                 activeSlide.classList.add('slide-active');
-            };
-            const moveTo = (index) => { currentIndex = (index + slides.length) % slides.length; updateCarousel(); };
-            
-            prevButton.onclick = () => moveTo(currentIndex - 1);
-            nextButton.onclick = () => moveTo(currentIndex + 1);
-            slides.forEach((slide, index) => slide.onclick = () => moveTo(index));
-            updateCarousel(true);
+            }
         }
 
-        function initMobile() {
-            isMobile = true;
-            prevButton.innerHTML = '▲'; nextButton.innerHTML = '▼';
-            track.style.transform = 'none';
+        function moveTo(index) {
+            if (index < 0 || index >= slides.length) return;
+            currentIndex = index;
 
-            // Set the default active slide without scrolling to it
-            currentIndex = slides.findIndex(s => s.dataset.projectId === 'environments');
-            if (currentIndex === -1) currentIndex = 0; // Fallback
-            slides[currentIndex].classList.add('slide-active');
-
-            const slideObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    entry.target.classList.toggle('slide-active', entry.isIntersecting);
-                    if(entry.isIntersecting) { currentIndex = slides.indexOf(entry.target); }
-                });
-            }, { root: viewport, threshold: 0.7 });
-            slides.forEach(slide => slideObserver.observe(slide));
-            
-            const scrollToSlide = (index) => { if(slides[index]) { slides[index].scrollIntoView({ behavior: 'smooth', block: 'center' }); } };
-
-            // FIX: New, robust arrow click logic
-            prevButton.onclick = () => { if (currentIndex > 0) { currentIndex--; scrollToSlide(currentIndex); }};
-            nextButton.onclick = () => { if (currentIndex < slides.length - 1) { currentIndex++; scrollToSlide(currentIndex); }};
-
-            const arrowObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    prevButton.classList.toggle('is-visible', entry.isIntersecting);
-                    nextButton.classList.toggle('is-visible', entry.isIntersecting);
-                });
-            }, { 
-                // FIX: Higher threshold for arrow visibility
-                threshold: 0.5
-            });
-            arrowObserver.observe(workSection);
+            if (isMobile && isPortrait) {
+                slides[currentIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else {
+                updateCarousel();
+            }
         }
         
-        const checkBreakpointAndInit = () => {
-            const shouldBeMobile = window.innerWidth <= 768;
-            if (shouldBeMobile !== isMobile) location.reload();
-        };
+        // --- EVENT HANDLERS ---
+        prevButton.onclick = () => moveTo(currentIndex - 1);
+        nextButton.onclick = () => moveTo(currentIndex + 1);
 
-        if (isMobile) initMobile();
-        else initDesktop();
-        window.addEventListener('resize', checkBreakpointAndInit);
+        slides.forEach((slide, index) => {
+            slide.onclick = () => {
+                if (index === currentIndex) {
+                    // Show lightbox if the active slide is clicked
+                    console.log("Show lightbox for", slide.dataset.projectId);
+                } else {
+                    // Otherwise, move to the clicked slide
+                    moveTo(index);
+                }
+            };
+        });
 
-        document.querySelectorAll('.nav-link').forEach(link => link.addEventListener('click', (e) => { e.preventDefault(); document.querySelector(link.getAttribute('href')).scrollIntoView({ behavior: 'smooth' }); }));
+        // --- OBSERVERS & BREAKPOINT MANAGEMENT ---
+        function handleBreakpoint() {
+            const newIsMobile = window.innerWidth <= 900;
+            const newIsPortrait = window.matchMedia("(orientation: portrait)").matches;
+
+            if (isMobile !== newIsMobile || isPortrait !== newIsPortrait) {
+                isMobile = newIsMobile;
+                isPortrait = newIsPortrait;
+                
+                prevButton.innerHTML = isMobile && isPortrait ? '▲' : '<';
+                nextButton.innerHTML = isMobile && isPortrait ? '▼' : '>';
+
+                // Re-initialize carousel display for the new mode without a full reload
+                if (isMobile && isPortrait) {
+                    track.style.transform = 'none'; // Ensure no transform is active
+                } else {
+                    updateCarousel();
+                }
+            }
+        }
+        
+        // Visibility observer for mobile arrows
+        const arrowObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (isMobile) {
+                    prevButton.classList.toggle('is-visible', entry.isIntersecting);
+                    nextButton.classList.toggle('is-visible', entry.isIntersecting);
+                }
+            });
+        }, { threshold: 0.3 });
+        arrowObserver.observe(workSection);
+
+        // Observer to update current index for portrait scroll
+        const scrollObserver = new IntersectionObserver((entries) => {
+             if (isMobile && isPortrait) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        currentIndex = slides.indexOf(entry.target);
+                    }
+                });
+            }
+        }, { root: viewport, threshold: 0.7 });
+        slides.forEach(slide => scrollObserver.observe(slide));
+        
+        handleBreakpoint(); // Initial call
+        window.addEventListener('resize', handleBreakpoint);
+
+        // Universal utilities
+        document.querySelectorAll('.nav-link').forEach(link => { link.addEventListener('click', (e) => { e.preventDefault(); document.querySelector(link.getAttribute('href')).scrollIntoView({ behavior: 'smooth' }); }); });
         const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
         const mainNav = document.querySelector('.main-nav');
         mobileNavToggle.addEventListener('click', () => { mainNav.classList.toggle('is-open'); });
