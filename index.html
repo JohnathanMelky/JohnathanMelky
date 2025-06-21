@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Johnathan Melky - 3D Generalist Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="spotlight-effect"></div>
+
+    <header class="main-header">
+        <div class="header-content">
+            <div class="logo">Johnathan Melky</div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="#about" class="nav-link">About</a></li>
+                    <li><a href="#work" class="nav-link">Work</a></li>
+                    <li><a href="#contact" class="nav-link">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- ================== HERO SECTION ================== -->
+        <section id="about" class="page-section">
+            <div class="content-wrapper hero-layout">
+                <div class="hero-text">
+                    <h1 class="reveal-line">I build <span class="accent-text">immersive 3D worlds</span> and bring digital products to life.</h1>
+                    <p class="intro-paragraph reveal-line">As a 3D Generalist with more than 4 years of experience in games studios and working with big clients like dubai police, I specialize in crafting everything from vast digital environments to detailed product visualizations, turning creative concepts into stunning, tangible realities.</p>
+                </div>
+                <div class="hero-skills">
+                    <div class="profile-picture-container reveal-line">
+                        <img src="./images/profile-picture.jpg" alt="A picture of Johnathan Melky">
+                    </div>
+                    <p class="profile-name reveal-line">Johnathan Melky</p>
+                    <h3 class="reveal-line">Core Skills</h3>
+                    <ul class="skills-list">
+                        <li>Blender</li>
+                        <li>ZBrush</li>
+                        <li>Substance Painter</li>
+                        <li>Unreal Engine</li>
+                        <li>Hard-Surface Modeling</li>
+                        <li>Character Art</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================== WORK SECTION ================== -->
+        <section id="work" class="page-section">
+            <div class="content-wrapper reveal-on-scroll">
+                <h1 class="centered-title">Selected Works</h1>
+            </div>
+            <div class="carousel-container reveal-on-scroll" data-delay="100">
+                <button id="prev-btn" class="carousel-arrow"><</button>
+                <div class="carousel-viewport">
+                    <!-- This track will be automatically filled by the JavaScript below -->
+                    <div class="carousel-track"></div>
+                </div>
+                <button id="next-btn" class="carousel-arrow">></button>
+            </div>
+        </section>
+
+        <!-- ================== CONTACT SECTION ================== -->
+        <section id="contact" class="page-section">
+            <div class="content-wrapper reveal-on-scroll">
+                <h1 class="centered-title">Let's Create Together</h1>
+                <p class="subtitle">Have a project in mind? I'm available for commissions and collaborations.</p>
+                <form class="contact-form" action="#" method="post">
+                    <div class="form-group"><label for="name">Your Name</label><input type="text" id="name" name="name" required></div>
+                    <div class="form-group"><label for="email">Your Email</label><input type="email" id="email" name="email" required></div>
+                    <div class="form-group full-width"><label for="message">Your Message</label><textarea id="message" name="message" rows="5" required></textarea></div>
+                    <button type="submit" class="btn-submit">Send Message</button>
+                </form>
+            </div>
+        </section>
+    </main>
+    
+    <footer><p>© 2025 Johnathan Melky. All Rights Reserved.</p></footer>
+
+    <div id="lightbox-overlay" class="lightbox-overlay">
+        <div class="lightbox-content">
+            <div id="lightbox-counter"></div>
+            <img id="lightbox-img" src="" alt="Artwork">
+            <div id="lightbox-caption"></div>
+        </div>
+        <button id="lightbox-prev" class="lightbox-arrow"><</button>
+        <button id="lightbox-next" class="lightbox-arrow">></button>
+        <span class="lightbox-close-btn">×</span>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // =================================================================================
+        // === YOUR PORTFOLIO CONFIGURATION - THIS IS THE ONLY PLACE YOU NEED TO EDIT! ===
+        // =================================================================================
+        // INSTRUCTIONS FOR USING YOUR GOOGLE DRIVE IMAGES:
+        // 1. In the same folder as your index.html, create the folder structure described below (e.g., './images/project-Electronics/').
+        // 2. Download your images for each category from Google Drive.
+        // 3. RENAME your images sequentially: '01.jpg', '02.jpg', '03.jpg', etc.
+        // 4. Place the renamed images into the corresponding project folder.
+        // 5. Update the 'imageCount' for each category to match the number of images you have.
+        // 6. Make sure your category thumbnails also exist in the path specified (e.g., './images/category-thumbnails/Electronics.jpg').
+
+        const portfolioData = [
+            {
+                id: "Electronics",
+                title: "Electronics: Gadgets & Gizmos",
+                thumbnail: "./images/category-thumbnails/Electronics.jpg",
+                // The script will look for your images inside this folder.
+                // It expects to find '01.jpg', '02.jpg', '03.jpg'... up to the imageCount.
+                folder: "./images/project-Electronics/",
+                imageCount: 15,
+                extension: "jpg"
+            },
+            {
+                id: "props",
+                title: "Props & Creatures: Game Assets",
+                thumbnail: "./images/category-thumbnails/props.jpg",
+                folder: "./images/project-props/",
+                imageCount: 15,
+                extension: "jpg"
+            },
+            {
+                id: "environments", // This will be the starting slide
+                title: "Environment Design: 'The Lost Valley'",
+                thumbnail: "./images/category-thumbnails/environments.jpg",
+                folder: "./images/project-environments/",
+                imageCount: 15,
+                extension: "jpg"
+            },
+            {
+                id: "product-design",
+                title: "Product Design: 'Chronos Watch'",
+                thumbnail: "./images/category-thumbnails/product-design.jpg",
+                folder: "./images/project-product-design/",
+                imageCount: 15,
+                extension: "jpg"
+            },
+            {
+                id: "Web-Logo-Design",
+                title: "Web & Logo Design: Branding",
+                thumbnail: "./images/category-thumbnails/Web-&-Logo-Design.jpg",
+                folder: "./images/project-Web-Logo-Design/",
+                imageCount: 15,
+                extension: "jpg"
+            }
+        ];
+
+        // ==================================================================
+        // === CORE WEBSITE LOGIC (No need to edit below this line) ===
+        // ==================================================================
+        const track = document.querySelector('.carousel-track');
+        if (track) {
+            portfolioData.forEach(project => {
+                const slide = document.createElement('div');
+                slide.className = 'category-item';
+                slide.dataset.projectId = project.id;
+                slide.innerHTML = `<div class="category-item-inner"><img src="${project.thumbnail}" alt="${project.title}"><div class="item-caption"><h3>${project.title.split(':')[0]}</h3></div></div>`;
+                track.appendChild(slide);
+            });
+        }
+
+        const spotlight = document.getElementById('spotlight-effect');
+        window.addEventListener('mousemove', (e) => { requestAnimationFrame(() => { spotlight.style.setProperty('--x', `${e.clientX}px`); spotlight.style.setProperty('--y', `${e.clientY}px`); }); });
+        
+        document.querySelectorAll('.nav-link').forEach(link => { link.addEventListener('click', (e) => { e.preventDefault(); document.querySelector(link.getAttribute('href')).scrollIntoView({ behavior: 'smooth' }); }); });
+
+        const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('is-visible'); observer.unobserve(entry.target); } }); }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal-on-scroll, .reveal-line, .skills-list li').forEach(el => observer.observe(el));
+
+        if (track && portfolioData.length > 0) {
+            const slides = Array.from(track.children);
+            const nextButton = document.getElementById('next-btn');
+            const prevButton = document.getElementById('prev-btn');
+            
+            let startIndex = portfolioData.findIndex(p => p.id === "environments");
+            if (startIndex === -1) startIndex = Math.floor(slides.length / 2);
+            let currentIndex = startIndex;
+            
+            const updateCarousel = (instant = false) => {
+                track.classList.toggle('no-transition', instant);
+                const activeSlide = slides[currentIndex];
+                const offset = (track.parentElement.offsetWidth / 2) - (activeSlide.offsetWidth / 2) - activeSlide.offsetLeft;
+                track.style.transform = `translateX(${offset}px)`;
+                slides.forEach(s => s.classList.remove('slide-active'));
+                activeSlide.classList.add('slide-active');
+            };
+            
+            const moveTo = (index) => { currentIndex = (index + slides.length) % slides.length; updateCarousel(); };
+            
+            nextButton.addEventListener('click', () => moveTo(currentIndex + 1));
+            prevButton.addEventListener('click', () => moveTo(currentIndex - 1));
+            window.addEventListener('resize', () => updateCarousel(true));
+
+            const lightboxOverlay = document.getElementById('lightbox-overlay');
+            const lightboxImg = document.getElementById('lightbox-img');
+            const lightboxCaption = document.getElementById('lightbox-caption');
+            const lightboxCounter = document.getElementById('lightbox-counter');
+            let currentGalleryImages = [];
+            let currentGalleryIndex = 0;
+
+            const updateLightboxImage = () => {
+                if (currentGalleryImages.length > 0) {
+                    lightboxImg.classList.remove('loaded');
+                    const img = new Image();
+                    img.src = currentGalleryImages[currentGalleryIndex];
+                    img.onload = () => {
+                        lightboxImg.src = img.src;
+                        lightboxImg.classList.add('loaded');
+                        lightboxCounter.textContent = `${currentGalleryIndex + 1} / ${currentGalleryImages.length}`;
+                    };
+                }
+            };
+            
+            const showLightbox = (projectId) => {
+                const project = portfolioData.find(p => p.id === projectId);
+                if (!project || !project.imageCount) return;
+
+                currentGalleryImages = [];
+                for (let i = 1; i <= project.imageCount; i++) {
+                    const number = String(i).padStart(2, '0');
+                    currentGalleryImages.push(`${project.folder}${number}.${project.extension}`);
+                }
+
+                currentGalleryIndex = 0;
+                lightboxCaption.textContent = project.title.split(':')[0];
+                
+                updateLightboxImage();
+                lightboxOverlay.classList.add('visible');
+                document.body.style.overflow = 'hidden';
+            };
+
+            const hideLightbox = () => { lightboxOverlay.classList.remove('visible'); document.body.style.overflow = ''; };
+
+            document.getElementById('lightbox-next').addEventListener('click', () => { currentGalleryIndex = (currentGalleryIndex + 1) % currentGalleryImages.length; updateLightboxImage(); });
+            document.getElementById('lightbox-prev').addEventListener('click', () => { currentGalleryIndex = (currentGalleryIndex - 1 + currentGalleryImages.length) % currentGalleryImages.length; updateLightboxImage(); });
+            
+            slides.forEach((slide, index) => {
+                slide.addEventListener('click', () => { 
+                    if (index === currentIndex) showLightbox(slide.dataset.projectId);
+                    else moveTo(index);
+                });
+            });
+            
+            document.querySelector('.lightbox-close-btn').addEventListener('click', hideLightbox);
+            updateCarousel(true);
+        }
+    });
+    </script>
+</body>
+</html>
