@@ -30,6 +30,8 @@
             #work .carousel-track {
                 flex-direction: column; 
                 width: 100%; 
+                /* --- FIX #1: Ensure padding/border are included in the width --- */
+                box-sizing: border-box;
             }
             
             #work .category-item {
@@ -37,6 +39,14 @@
                 height: auto;
                 margin: 20px auto; 
                 flex-shrink: 0;
+                 /* --- FIX #2: Apply box-sizing here as well for safety --- */
+                box-sizing: border-box;
+            }
+
+            /* --- FIX #3: Force the text inside the item to wrap correctly --- */
+            #work .item-caption h3 {
+                white-space: normal;
+                word-wrap: break-word;
             }
             
             #work .carousel-arrow {
@@ -147,7 +157,7 @@
         ];
 
         // ==================================================================
-        // === CORE WEBSITE LOGIC (No need to edit below this line) ===
+        // === CORE WEBSITE LOGIC (No changes needed below) ===
         // ==================================================================
         const track = document.querySelector('.carousel-track');
         if (track) {
@@ -199,24 +209,18 @@
             
             const updateCarousel = (instant = false) => {
                 const isVertical = window.innerWidth <= MOBILE_BREAKPOINT;
-
                 if (instant) track.classList.add('no-transition');
                 else track.classList.remove('no-transition');
-                
                 const activeSlide = slides[currentIndex];
-                if (!activeSlide) return; // safety check
-
+                if (!activeSlide) return;
                 let offset;
                 if (isVertical) {
                     offset = (carouselViewport.offsetHeight / 2) - (activeSlide.offsetHeight / 2) - activeSlide.offsetTop;
-                    // --- THE FIX IS HERE ---
-                    // Explicitly set translateX to 0 to prevent horizontal shifting on mobile.
                     track.style.transform = `translateX(0) translateY(${offset}px)`;
                 } else {
                     offset = (carouselViewport.offsetWidth / 2) - (activeSlide.offsetWidth / 2) - activeSlide.offsetLeft;
                     track.style.transform = `translateX(${offset}px)`;
                 }
-                
                 slides.forEach(s => s.classList.remove('slide-active'));
                 activeSlide.classList.add('slide-active');
             };
@@ -246,10 +250,8 @@
                 if (!isDragging) return;
                 const isVertical = window.innerWidth <= MOBILE_BREAKPOINT;
                 if (isVertical) e.preventDefault();
-                
                 const currentPos = isVertical ? e.touches[0].pageY : e.touches[0].pageX;
                 const diff = currentPos - startPos;
-
                 if (isVertical) {
                     track.style.transform = `translateX(0) translateY(${startTranslate + diff}px)`;
                 } else {
@@ -261,11 +263,9 @@
                 if (!isDragging) return;
                 isDragging = false;
                 const isVertical = window.innerWidth <= MOBILE_BREAKPOINT;
-
                 const finalTransform = new WebKitCSSMatrix(window.getComputedStyle(track).transform);
                 const finalTranslate = isVertical ? finalTransform.m42 : finalTransform.m41;
                 const diff = finalTranslate - startTranslate;
-
                 if (Math.abs(diff) > 50) {
                     if (diff < 0) moveTo(currentIndex + 1);
                     else moveTo(currentIndex - 1);
@@ -297,12 +297,10 @@
             const showLightbox = (projectId) => {
                 const project = portfolioData.find(p => p.id === projectId);
                 if (!project || !project.imageCount) return;
-
                 currentGalleryImages = [];
                 for (let i = 1; i <= project.imageCount; i++) {
                     currentGalleryImages.push(`${project.folder}${String(i).padStart(2, '0')}.${project.extension}`);
                 }
-
                 currentGalleryIndex = 0;
                 lightboxCaption.textContent = project.title.split(':')[0];
                 updateLightboxImage();
