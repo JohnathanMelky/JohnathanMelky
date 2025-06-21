@@ -141,7 +141,7 @@ footer { text-align: center; padding: 3rem 5%; background-color: var(--color-lig
 }
 
 @media (max-width: 768px) {
-    .page-section { padding: 6rem 20px; }
+    .page-section { padding-left: 20px; padding-right: 20px; }
     h1 { font-size: 2.5rem; } 
     .intro-paragraph { font-size: 1.1rem; }
     .contact-form { grid-template-columns: 1fr; }
@@ -154,21 +154,8 @@ footer { text-align: center; padding: 3rem 5%; background-color: var(--color-lig
     .main-nav a { font-size: 2rem; }
 
     /* --- MOBILE CAROUSEL - DEFINITIVE FIX --- */
-    
-    /* 1. Make the #work section edge-to-edge */
-    #work.page-section {
-        padding-left: 0;
-        padding-right: 0;
-    }
-
-    /* 2. Add padding back to the title so it's not at the edge */
-    #work .centered-title {
-        padding-left: 20px;
-        padding-right: 20px;
-    }
-
-    /* 3. The container is a simple block element now */
     .carousel-container {
+        /* Let the container be 100% of its parent (.content-wrapper) */
         width: 100%; 
         transform: none;
         left: auto;
@@ -179,39 +166,50 @@ footer { text-align: center; padding: 3rem 5%; background-color: var(--color-lig
         display: none; 
     }
 
-    /* 4. The viewport MUST hide overflowing content */
     .carousel-viewport {
+        /* The viewport MUST hide the overflow. This is the key. */
         overflow: hidden; 
-        height: calc((80vw / 16) * 9); 
+        height: calc((80% / 16) * 9); /* Height based on item's new % width */
         mask-image: none;
         -webkit-mask-image: none;
     }
     
-    /* 5. The track is a simple relative container */
     .carousel-track {
+        /* Reset desktop styles to be a simple flex row */
         position: relative;
         left: auto;
         top: auto;
+        display: flex;
+        align-items: center;
     }
 
-    /* 6. Reset item styles for mobile */
     .category-item {
-        width: 80vw;
+        /* Set width as a percentage of the parent viewport */
+        width: 80%;
+        margin: 0 2.5%; /* Creates 5% gap between items */
+        
+        /* Reset other desktop styles */
         max-width: none;
-        transform: scale(1);
-        opacity: 1;
-        margin: 0 2.5vw;
-        padding: 0;
-        transition: transform 0.4s ease;
+        transform: scale(1); 
+        opacity: 1; 
+        padding: 0; 
+        transition: transform 0.4s ease; 
     }
 
     .category-item::before {
-        display: none; /* Hide desktop glow border */
+        /* The desktop glow effect is distracting on mobile */
+        display: none; 
+    }
+    
+    .slide-active {
+        /* A subtle scale effect for the active item */
+        transform: scale(1.05); 
+    }
+    
+    .item-caption h3 {
+        font-size: 1.2rem;
     }
 
-    .slide-active {
-        transform: scale(1.05); /* Highlight active slide */
-    }
 
     /* --- Mobile Hero --- */
     .profile-picture-container { width: 200px; height: 200px; }
@@ -221,7 +219,7 @@ footer { text-align: center; padding: 3rem 5%; background-color: var(--color-lig
 @media (max-width: 480px) {
     h1 { font-size: 2rem; }
     .logo { font-size: 1.5rem; }
-    .page-section { padding: 5rem 15px; }
+    .page-section { padding-left: 15px; padding-right: 15px; }
     .lightbox-arrow { width: 40px; height: 80px; font-size: 1.5rem; }
     #lightbox-prev { left: 5px; } #lightbox-next { right: 5px; }
     .lightbox-close-btn { top: 1rem; right: 1rem; font-size: 2.5rem; }
