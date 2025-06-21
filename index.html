@@ -30,25 +30,26 @@
             #work .carousel-track {
                 flex-direction: column; 
                 width: 100%; 
-                /* --- FIX #1: Ensure padding/border are included in the width --- */
                 box-sizing: border-box;
             }
             
             #work .category-item {
                 width: 75% !important; 
-                height: auto;
                 margin: 20px auto; 
                 flex-shrink: 0;
-                 /* --- FIX #2: Apply box-sizing here as well for safety --- */
                 box-sizing: border-box;
-            }
-
-            /* --- FIX #3: Force the text inside the item to wrap correctly --- */
-            #work .item-caption h3 {
-                white-space: normal;
-                word-wrap: break-word;
+                /* --- FIX #1: THE CRITICAL FIX --- */
+                /* This forces the item to obey its 'width' property instead of expanding to fit its content. */
+                min-width: 0;
             }
             
+            /* --- FIX #2: MORE AGGRESSIVE TEXT WRAPPING --- */
+            #work .item-caption h3 {
+                white-space: normal;
+                overflow-wrap: break-word;
+                word-break: break-word;
+            }
+
             #work .carousel-arrow {
                 display: none; 
             }
