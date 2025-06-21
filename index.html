@@ -78,44 +78,29 @@
 
         /* MOBILE: Vertical Scrolling List */
         @media (max-width: 768px) {
-            #work .content-wrapper {
-                /* FIX: Allow content to be full width to prevent cropping */
-                max-width: none;
-                padding-left: 0;
-                padding-right: 0;
-            }
-            #work .centered-title {
-                padding-left: 20px; /* Re-apply padding only to the title */
-                padding-right: 20px;
-            }
+            #work .content-wrapper { max-width: none; padding-left: 0; padding-right: 0; }
+            #work .centered-title { padding-left: 20px; padding-right: 20px; }
             .carousel-container { margin-top: 2rem; }
             .carousel-viewport { overflow-y: scroll; scroll-snap-type: y mandatory; height: 75vh; scrollbar-width: none; -ms-overflow-style: none; }
             .carousel-viewport::-webkit-scrollbar { display: none; }
             .carousel-track { flex-direction: column; align-items: center; gap: 4rem; padding: 15vh 0; }
-            .category-item { width: 90vw; flex-shrink: 0; aspect-ratio: 16 / 9; scroll-snap-align: center; opacity: 0.6; transform: scale(0.9); transition: opacity 0.5s, transform 0.5s, box-shadow 0.5s; }
+            .category-item {
+                /* FIX: Slightly smaller to guarantee no side cropping */
+                width: 88vw;
+                flex-shrink: 0; aspect-ratio: 16 / 9; scroll-snap-align: center; opacity: 0.6; transform: scale(0.9); transition: opacity 0.5s, transform 0.5s, box-shadow 0.5s;
+            }
             .slide-active { opacity: 1; transform: scale(1); box-shadow: 0 0 25px rgba(255, 199, 0, 0.4); border-radius: 12px; }
-            /* FIXED & CONTEXTUAL MOBILE ARROWS */
             .carousel-arrow {
-                position: fixed; /* FIX: Stays in place on scroll */
-                right: 20px;
-                z-index: 100;
+                position: fixed; right: 20px; z-index: 100;
                 width: 60px; height: 60px;
                 background: rgba(20, 20, 20, 0.8);
                 border: 1px solid var(--border-color);
-                border-radius: 50%;
-                font-size: 2rem; line-height: 60px; text-align: center;
-                backdrop-filter: blur(5px);
-                box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-                /* FIX: Hide by default */
-                opacity: 0;
-                pointer-events: none;
+                border-radius: 50%; font-size: 2rem; line-height: 60px; text-align: center;
+                backdrop-filter: blur(5px); box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+                opacity: 0; pointer-events: none;
                 transition: transform 0.2s ease, background-color 0.2s ease, opacity 0.4s ease;
             }
-            /* FIX: Show only when work section is visible */
-            .carousel-arrow.is-visible {
-                opacity: 1;
-                pointer-events: auto;
-            }
+            .carousel-arrow.is-visible { opacity: 1; pointer-events: auto; }
             .carousel-arrow:active { transform: scale(0.9); }
             #prev-btn { top: 20vh; }
             #next-btn { bottom: 20vh; }
@@ -195,17 +180,14 @@
     
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // --- DATA ---
-        // FIX: Reordered to put 'environments' in the middle for desktop logic
         const portfolioData = [
             { id: "Electronics", title: "Electronics", thumbnail: "./images/category-thumbnails/Electronics.jpg"},
             { id: "props", title: "Props & Creatures", thumbnail: "./images/category-thumbnails/props.jpg"},
-            { id: "environments", title: "Environment Design", thumbnail: "./images/category-thumbnails/environments.jpg"},
+            { id: "environments", title: "Environment Design", thumbnail: "./images/category-thumbnails/environments.jpg"}, // The desired starting item
             { id: "product-design", title: "Product Design", thumbnail: "./images/category-thumbnails/product-design.jpg"},
             { id: "Web-Logo-Design", title: "Web & Logo Design", thumbnail: "./images/category-thumbnails/Web-&-Logo-Design.jpg"}
         ];
 
-        // --- ELEMENTS ---
         const track = document.querySelector('.carousel-track');
         const prevButton = document.getElementById('prev-btn');
         const nextButton = document.getElementById('next-btn');
@@ -215,21 +197,19 @@
         let currentIndex = 0;
         let isMobile = window.innerWidth <= 768;
 
-        // --- POPULATE SLIDES ---
         portfolioData.forEach(project => {
             const slide = document.createElement('div');
             slide.className = 'category-item';
             slide.dataset.projectId = project.id;
             slide.innerHTML = `<div class="category-item-inner"><img src="${project.thumbnail}" alt="${project.title}"><div class="item-caption"><h3>${project.title}</h3></div></div>`;
             track.appendChild(slide);
-            slides.push(slide);
+slides.push(slide);
         });
 
-        // --- DESKTOP LOGIC ---
         function initDesktop() {
             isMobile = false;
             prevButton.innerHTML = '<'; nextButton.innerHTML = '>';
-            track.style.transform = ''; // Clear mobile styles
+            track.style.transform = '';
 
             currentIndex = portfolioData.findIndex(p => p.id === "environments");
 
@@ -250,35 +230,43 @@
             updateCarousel(true);
         }
 
-        // --- MOBILE LOGIC ---
         function initMobile() {
             isMobile = true;
             prevButton.innerHTML = '▲'; nextButton.innerHTML = '▼';
             track.style.transform = 'none';
 
-            const observer = new IntersectionObserver((entries) => {
+            // Observer to track which slide is visible FOR ARROW LOGIC
+            const slideObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     entry.target.classList.toggle('slide-active', entry.isIntersecting);
-                    if(entry.isIntersecting) { currentIndex = slides.indexOf(entry.target); }
+                    if(entry.isIntersecting) {
+                        // This updates the index as the user MANUALLY scrolls
+                        currentIndex = slides.indexOf(entry.target);
+                    }
                 });
             }, { root: viewport, threshold: 0.7 });
-            slides.forEach(slide => observer.observe(slide));
+            slides.forEach(slide => slideObserver.observe(slide));
 
+            // Function to programmatically scroll
             const scrollToSlide = (index) => { if(slides[index]) { slides[index].scrollIntoView({ behavior: 'smooth', block: 'center' }); } };
-            prevButton.onclick = () => scrollToSlide(currentIndex - 1);
-            nextButton.onclick = () => scrollToSlide(currentIndex + 1);
 
-            // FIX: Arrow visibility logic
+            // FIX: Robust arrow logic that updates the index itself
+            prevButton.onclick = () => { if (currentIndex > 0) { currentIndex--; scrollToSlide(currentIndex); }};
+            nextButton.onclick = () => { if (currentIndex < slides.length - 1) { currentIndex++; scrollToSlide(currentIndex); }};
+
+            // FIX: Observer for arrow visibility
             const arrowObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     prevButton.classList.toggle('is-visible', entry.isIntersecting);
                     nextButton.classList.toggle('is-visible', entry.isIntersecting);
                 });
-            }, { threshold: 0.1 });
+            }, { 
+                // FIX: Higher threshold so arrows appear later
+                threshold: 0.4 
+            });
             arrowObserver.observe(workSection);
         }
         
-        // --- CHECKER AND INITIALIZER ---
         const checkBreakpointAndInit = () => {
             const shouldBeMobile = window.innerWidth <= 768;
             if (shouldBeMobile && !isMobile) location.reload();
@@ -289,7 +277,6 @@
         else initDesktop();
         window.addEventListener('resize', checkBreakpointAndInit);
 
-        // --- UTILITIES ---
         document.querySelectorAll('.nav-link').forEach(link => link.addEventListener('click', (e) => { e.preventDefault(); document.querySelector(link.getAttribute('href')).scrollIntoView({ behavior: 'smooth' }); }));
         const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
         const mainNav = document.querySelector('.main-nav');
