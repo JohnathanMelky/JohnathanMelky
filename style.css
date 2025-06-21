@@ -141,27 +141,45 @@ footer { text-align: center; padding: 3rem 5%; background-color: var(--color-lig
 }
 
 @media (max-width: 768px) {
+    /* --- Mobile Header Bar --- */
+    body {
+        padding-top: 60px; 
+    }
+    .main-header {
+        padding: 0.5rem 5%; 
+    }
+    .logo {
+        font-size: 1.4rem; 
+    }
+    .mobile-nav-toggle {
+        display: block;
+        font-size: 2rem;
+        z-index: 1001; 
+        background: none; 
+        border: none; 
+        color: var(--primary-text-color); 
+        cursor: pointer;
+    }
+    
     .page-section { padding-left: 20px; padding-right: 20px; }
     h1 { font-size: 2.5rem; } 
     .intro-paragraph { font-size: 1.1rem; }
     .contact-form { grid-template-columns: 1fr; }
     
-    /* --- Mobile Navigation --- */
-    .mobile-nav-toggle { display: block; z-index: 1001; background: none; border: none; color: var(--primary-text-color); font-size: 2.5rem; cursor: pointer; }
+    /* --- Mobile Navigation (Opened Menu) --- */
     .main-nav { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--color-darkest); display: flex; justify-content: center; align-items: center; transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.7, 0, 0.3, 1); }
     .main-nav.is-open { transform: translateX(0); }
     .main-nav ul { 
         flex-direction: column; 
         text-align: center; 
-        gap: 2rem; /* REDUCED: Adjusted gap to match the new smaller font size */
+        gap: 1.5rem; /* CORRECTED: Reduced gap */
     }
     .main-nav a { 
-        font-size: 1.5rem; /* REDUCED: Made the menu links smaller for a better fit on mobile */
+        font-size: 1.3rem; /* CORRECTED: Significantly smaller font for menu links */
     }
 
-    /* --- MOBILE CAROUSEL - DEFINITIVE FIX --- */
+    /* --- MOBILE CAROUSEL --- */
     .carousel-container {
-        /* Let the container be 100% of its parent (.content-wrapper) */
         width: 100%; 
         transform: none;
         left: auto;
@@ -173,15 +191,13 @@ footer { text-align: center; padding: 3rem 5%; background-color: var(--color-lig
     }
 
     .carousel-viewport {
-        /* The viewport MUST hide the overflow. This is the key. */
         overflow: hidden; 
-        height: calc((80% / 16) * 9); /* Height based on item's new % width */
+        height: calc((80% / 16) * 9); 
         mask-image: none;
         -webkit-mask-image: none;
     }
     
     .carousel-track {
-        /* Reset desktop styles to be a simple flex row */
         position: relative;
         left: auto;
         top: auto;
@@ -190,11 +206,8 @@ footer { text-align: center; padding: 3rem 5%; background-color: var(--color-lig
     }
 
     .category-item {
-        /* Set width as a percentage of the parent viewport */
         width: 80%;
-        margin: 0 2.5%; /* Creates 5% gap between items */
-        
-        /* Reset other desktop styles */
+        margin: 0 2.5%; 
         max-width: none;
         transform: scale(1); 
         opacity: 1; 
@@ -203,12 +216,10 @@ footer { text-align: center; padding: 3rem 5%; background-color: var(--color-lig
     }
 
     .category-item::before {
-        /* The desktop glow effect is distracting on mobile */
         display: none; 
     }
     
     .slide-active {
-        /* A subtle scale effect for the active item */
         transform: scale(1.05); 
     }
     
@@ -224,7 +235,7 @@ footer { text-align: center; padding: 3rem 5%; background-color: var(--color-lig
 
 @media (max-width: 480px) {
     h1 { font-size: 2rem; }
-    .logo { font-size: 1.5rem; }
+    .logo { font-size: 1.2rem; }
     .page-section { padding-left: 15px; padding-right: 15px; }
     .lightbox-arrow { width: 40px; height: 80px; font-size: 1.5rem; }
     #lightbox-prev { left: 5px; } #lightbox-next { right: 5px; }
