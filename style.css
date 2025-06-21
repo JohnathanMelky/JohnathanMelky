@@ -180,8 +180,8 @@ footer { text-align: center; padding: 3rem 5%; background-color: var(--color-lig
         transition: transform 0.4s cubic-bezier(0.7, 0, 0.3, 1);
         
         /* --- THE FIX IS HERE --- */
-        align-items: center; /* This correctly centers the items vertically */
-        padding-top: 0;      /* Padding is removed to allow true centering */
+        align-items: flex-start; /* Aligns the content to the top */
+        padding-top: 8rem;      /* Pushes the content down from the top */
     }
     .main-nav.is-open { transform: translateX(0); }
     .main-nav ul { 
