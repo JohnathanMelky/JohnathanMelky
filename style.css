@@ -65,10 +65,8 @@ h1 { font-family: var(--font-heading); font-size: 4rem; line-height: 1.2; margin
 .profile-name { font-family: var(--font-heading); font-size: 2.2rem; font-weight: 700; color: var(--primary-text-color); text-shadow: 0 0 10px rgba(255, 199, 0, 0.5); margin-top: 1.5rem; margin-bottom: 2.5rem; text-align: center; }
 .reveal-line { opacity: 0; transform: translateY(30px); transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
 .reveal-line.is-visible { opacity: 1; transform: translateY(0); }
-.hero-text .reveal-line:nth-child(1) { transition-delay: 0.2s; }
-.hero-text .reveal-line:nth-child(2) { transition-delay: 0.4s; }
-.profile-picture-container.reveal-line { transition-delay: 0.6s; }
-.profile-name.reveal-line { transition-delay: 0.8s; }
+.hero-text .reveal-line:nth-child(1) { transition-delay: 0.2s; } .hero-text .reveal-line:nth-child(2) { transition-delay: 0.4s; }
+.profile-picture-container.reveal-line { transition-delay: 0.6s; } .profile-name.reveal-line { transition-delay: 0.8s; }
 .hero-skills h3.reveal-line { transition-delay: 1.0s; }
 .intro-paragraph { font-size: 1.25rem; color: var(--secondary-text-color); max-width: 650px; }
 .hero-skills h3 { font-family: var(--font-body); text-transform: uppercase; letter-spacing: 2px; color: var(--secondary-text-color); font-size: 1rem; margin-bottom: 1.5rem; }
@@ -147,7 +145,7 @@ footer { text-align: center; padding: 3rem 5%; background-color: var(--color-lig
     /* --- Mobile Navigation --- */
     .mobile-nav-toggle {
         display: block;
-        z-index: 1001; /* Above mobile nav */
+        z-index: 1001;
         background: none; border: none;
         color: var(--primary-text-color);
         font-size: 2.5rem;
@@ -174,19 +172,16 @@ footer { text-align: center; padding: 3rem 5%; background-color: var(--color-lig
 
     /* --- Mobile Carousel --- */
     .carousel-container { padding: 0; }
-    .carousel-arrow { display: none; } /* Hide arrows, use swipe */
+    .carousel-arrow { display: none; }
     .carousel-viewport {
-        mask-image: none; /* Cleaner look on mobile */
+        mask-image: none;
         -webkit-mask-image: none;
         height: calc((85vw / 16) * 9);
-        overflow: visible; /* Allow seeing adjacent slides */
-    }
-    .carousel-track {
-        overflow: visible;
+        overflow: hidden; /* CORRECTED: This was 'visible', causing the bug. */
     }
     .category-item {
-        width: 85vw; /* Make active slide bigger */
-        margin: 0 2.5vw; /* Adjust spacing */
+        width: 85vw;
+        margin: 0 2.5vw;
     }
 
     /* --- Mobile Hero --- */
