@@ -31,14 +31,17 @@
                 flex-direction: column; 
                 width: 100%; 
                 box-sizing: border-box;
-                /* --- FIX #1: Use flexbox for robust centering --- */
-                align-items: center; 
+                /* align-items removed, item will center itself now */
             }
             
             #work .category-item {
-                width: 75% !important; 
-                /* --- FIX #2: Remove horizontal auto margin --- */
-                margin: 20px 0; 
+                /* --- THE DEFINITIVE FIX --- */
+                /* Use viewport width (vw) for an unambiguous size relative to the screen */
+                width: 75vw;
+                max-width: 75vw; /* Safety */
+                /* With a fixed width, margin:auto is the most reliable centering method */
+                margin: 20px auto; 
+
                 flex-shrink: 0;
                 box-sizing: border-box;
                 min-width: 0;
