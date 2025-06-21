@@ -11,7 +11,6 @@
     <!-- Styles for vertical carousel on mobile -->
     <style>
         @media (max-width: 768px) {
-            /* --- FIX #1: Prevent horizontal overflow for the entire page on mobile --- */
             html, body {
                 overflow-x: hidden;
             }
@@ -25,7 +24,6 @@
             #work .carousel-viewport {
                 width: 100%;
                 height: 100%;
-                /* --- FIX #2: Force the viewport to hide overflowing content --- */
                 overflow: hidden; 
             }
 
@@ -162,7 +160,6 @@
             });
         }
         
-        // --- Mobile Navigation ---
         const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
         const mainNav = document.querySelector('.main-nav');
         mobileNavToggle.addEventListener('click', () => {
@@ -189,13 +186,12 @@
         const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('is-visible'); observer.unobserve(entry.target); } }); }, { threshold: 0.1 });
         document.querySelectorAll('.reveal-on-scroll, .reveal-line, .skills-list li').forEach(el => observer.observe(el));
 
-        // --- MODIFIED: Carousel and Swipe Logic ---
         if (track && portfolioData.length > 0) {
             const slides = Array.from(track.children);
             const carouselViewport = document.querySelector('.carousel-viewport');
             const nextButton = document.getElementById('next-btn');
             const prevButton = document.getElementById('prev-btn');
-            const MOBILE_BREAKPOINT = 768; // Breakpoint for vertical layout
+            const MOBILE_BREAKPOINT = 768;
 
             let startIndex = portfolioData.findIndex(p => p.id === "environments");
             if (startIndex === -1) startIndex = Math.floor(slides.length / 2);
@@ -208,13 +204,15 @@
                 else track.classList.remove('no-transition');
                 
                 const activeSlide = slides[currentIndex];
+                if (!activeSlide) return; // safety check
+
                 let offset;
                 if (isVertical) {
-                    track.style.flexDirection = 'column';
                     offset = (carouselViewport.offsetHeight / 2) - (activeSlide.offsetHeight / 2) - activeSlide.offsetTop;
-                    track.style.transform = `translateY(${offset}px)`;
+                    // --- THE FIX IS HERE ---
+                    // Explicitly set translateX to 0 to prevent horizontal shifting on mobile.
+                    track.style.transform = `translateX(0) translateY(${offset}px)`;
                 } else {
-                    track.style.flexDirection = 'row';
                     offset = (carouselViewport.offsetWidth / 2) - (activeSlide.offsetWidth / 2) - activeSlide.offsetLeft;
                     track.style.transform = `translateX(${offset}px)`;
                 }
@@ -230,14 +228,8 @@
             
             nextButton.addEventListener('click', () => moveTo(currentIndex + 1));
             prevButton.addEventListener('click', () => moveTo(currentIndex - 1));
-            window.addEventListener('resize', () => {
-                // When resizing, we might switch between horizontal and vertical
-                // We need to clear any transform that might be incorrect for the new layout
-                track.style.transform = ''; 
-                updateCarousel(true);
-            });
+            window.addEventListener('resize', () => updateCarousel(true));
 
-            // --- Carousel Swipe Logic (Handles both Vertical and Horizontal) ---
             let isDragging = false, startPos, startTranslate;
             
             carouselViewport.addEventListener('touchstart', (e) => {
@@ -253,14 +245,13 @@
             carouselViewport.addEventListener('touchmove', (e) => {
                 if (!isDragging) return;
                 const isVertical = window.innerWidth <= MOBILE_BREAKPOINT;
-                // Allow vertical scrolling on desktop, but prevent on mobile during swipe
-                if (isVertical) {
-                    e.preventDefault();
-                }
+                if (isVertical) e.preventDefault();
+                
                 const currentPos = isVertical ? e.touches[0].pageY : e.touches[0].pageX;
                 const diff = currentPos - startPos;
+
                 if (isVertical) {
-                    track.style.transform = `translateY(${startTranslate + diff}px)`;
+                    track.style.transform = `translateX(0) translateY(${startTranslate + diff}px)`;
                 } else {
                     track.style.transform = `translateX(${startTranslate + diff}px)`;
                 }
@@ -271,21 +262,18 @@
                 isDragging = false;
                 const isVertical = window.innerWidth <= MOBILE_BREAKPOINT;
 
-                const finalTranslate = new WebKitCSSMatrix(window.getComputedStyle(track).transform)[isVertical ? 'm42' : 'm41'];
+                const finalTransform = new WebKitCSSMatrix(window.getComputedStyle(track).transform);
+                const finalTranslate = isVertical ? finalTransform.m42 : finalTransform.m41;
                 const diff = finalTranslate - startTranslate;
 
-                if (Math.abs(diff) > 50) { // Swipe threshold
-                    if (diff < 0) { // Swiped left or up
-                        moveTo(currentIndex + 1);
-                    } else { // Swiped right or down
-                        moveTo(currentIndex - 1);
-                    }
+                if (Math.abs(diff) > 50) {
+                    if (diff < 0) moveTo(currentIndex + 1);
+                    else moveTo(currentIndex - 1);
                 } else {
                     updateCarousel(); 
                 }
             });
 
-            // --- UNCHANGED: Lightbox Logic ---
             const lightboxOverlay = document.getElementById('lightbox-overlay');
             const lightboxImg = document.getElementById('lightbox-img');
             const lightboxCaption = document.getElementById('lightbox-caption');
@@ -312,13 +300,11 @@
 
                 currentGalleryImages = [];
                 for (let i = 1; i <= project.imageCount; i++) {
-                    const number = String(i).padStart(2, '0');
-                    currentGalleryImages.push(`${project.folder}${number}.${project.extension}`);
+                    currentGalleryImages.push(`${project.folder}${String(i).padStart(2, '0')}.${project.extension}`);
                 }
 
                 currentGalleryIndex = 0;
                 lightboxCaption.textContent = project.title.split(':')[0];
-                
                 updateLightboxImage();
                 lightboxOverlay.classList.add('visible');
                 document.body.style.overflow = 'hidden';
